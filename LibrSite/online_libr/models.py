@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from datetime import date
 
 
 class LibUser(models.Model):
@@ -24,7 +25,10 @@ class LibUser(models.Model):
 class Book(models.Model):
     title = models.CharField(max_length=200)
     author = models.CharField(max_length=200)
-    read_counter = models.IntegerField(default=0)
+    publisher = models.CharField(max_length=200, default="Unknown")
+    pub_date = models.DateField(default="1998-08-06", null=True, blank=True)
+    read_counter = models.IntegerField(default=0, editable=False)
+    added = models.DateField(auto_now_add=True)
 
     class Meta:
         constraints = [models.UniqueConstraint(fields=['title', 'author'], name='unique_book')]
@@ -36,13 +40,15 @@ class Book(models.Model):
 class ReadStatus(models.Model):
     STATUS_CHOICES = [
         ('P', 'Planned'),
-        ('R', 'Read'),
+        ('C', 'Completed'),
         ('D', 'Dropped'),
         ('U', 'Unread'),
+        ('R', 'Reading')
     ]
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='statuses', on_delete=models.CASCADE, default=0)
     book = models.ForeignKey(Book, related_name='statuses', on_delete=models.CASCADE, default=0)
     status = models.CharField(max_length=2, choices=STATUS_CHOICES, default='U')
+    date = models.DateField(auto_now=True)
 
     class Meta:
         constraints = [models.UniqueConstraint(fields=['user', 'book'], name='unique_status')]
@@ -56,7 +62,7 @@ class Review(models.Model):
     book = models.ForeignKey(Book, related_name='reviews', on_delete=models.CASCADE, default=0)
     comment = models.CharField(max_length=400, blank=True)
     rating = models.IntegerField(default=10)
-
+    date = models.DateField(auto_created=True)
     # class Meta:
     # constraints = [models.UniqueConstraint(fields=['user', 'book'], name='unique_review')]
 

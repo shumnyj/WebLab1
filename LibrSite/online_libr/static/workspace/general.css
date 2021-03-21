@@ -1,0 +1,251 @@
+html {
+    height:100%;
+}
+
+body {
+    height:100%;
+    font-size: 100%;
+    /* background: url("body_bg.jpg") repeat-y ;
+    background-size: 100%;*/
+}
+
+label {
+    padding: 3px;
+}
+
+.mytmp {
+    color: darkgrey;
+    font-size: 0.8em;
+}
+
+.header {
+    padding: 10px;
+	margin: 0px;
+    background: green;
+	color: white;
+
+	text-align: center;
+}
+
+.Mcontainer {
+    margin: auto;
+    /*min-height: 50vh;*/
+    max-width: 1440px;
+    background: rgba(255, 255, 255, 0.7)
+}
+
+footer {
+    height: 50px;
+    background: green;
+    border-bottom: solid darkgreen 3px;
+    margin-bottom: 5px;
+}
+
+.row {
+    margin: 0;
+}
+
+.content {
+    padding: 20px;
+	background: transparent;
+
+	border: 1px solid black;
+	z-index: 1
+}
+
+
+#sidebar {
+    width: 100%;
+    position: sticky;
+    top: 0;
+    padding: 10px;
+    max-height: 350px;
+	background: darkslateblue;
+	border-bottom: 10px solid blueviolet;
+	z-index: 100;
+}
+
+/*#sidebar div {
+    margin: 0;
+    padding: 0;
+}*/
+
+.list-group-item {
+    border: 1px solid white;
+    padding: 3px 10px 3px 10px;
+    background: transparent;
+    color: white;
+}
+
+/*.list-group-item:hover {
+    padding-left: 35px;
+}*/
+
+.notification-container {
+    /*position: fixed;
+    top: 70px;
+    right: 70px;
+    z-index: 100;*/
+    margin-top: 10px;
+}
+
+.notification-button {
+    max-width: 100%;
+    max-height: 100px;
+    color: white;
+    background: orange;
+    border: 2px solid orangered;
+    border-radius: 5px;
+    padding: 3px;
+    z-index: 100;
+}
+
+.notification-container .show {
+    display: block;
+}
+
+.notification-content {
+    position: relative;
+    display: none;
+    max-height: 200px;
+    background: azure;
+    border: 1px solid indigo;
+    overflow: auto;
+    /*width: 20vw;
+    right: 103%;
+    top: 0;*/
+    z-index: 100;
+}
+
+.notification-instance {
+    border-bottom: 1px solid darkorchid;
+}
+
+.notification-instance .notetext {
+    color: indigo;
+    margin: 5px;
+}
+
+.notification-instance .minitext {
+    padding: 2%;
+    font-size: 0.6em;
+    color: grey;
+    margin: 0;
+    max-width: 70%;
+}
+
+
+.ul-form {
+    list-style-type:none;
+}
+
+.ul-form li {
+     padding: 0 20px 0 20px;
+}
+
+.ul-form li label {
+    width: 200px;
+    max-width: 47%;
+    padding: 3px;
+}
+
+.ul-form li input,textarea {
+    width: 300px;
+    max-width: 100%;
+    padding: 3px;
+}
+
+.table_container {
+    padding: 5px;
+    width: 100%;
+    overflow-x: auto;
+}
+
+.double_table {
+    width: 80%;
+}
+
+tr th {
+    padding: 5px;
+    text-align: center;
+    border: 2px solid grey;
+    color: white;
+    background: cornflowerblue;
+}
+
+tr td {
+
+    padding: 5px;
+    border: 1px solid grey;
+}
+
+th p {
+    writing-mode: vertical-lr;
+    margin: 0;
+}
+
+th.tmark, td.tmark {
+    max-width: 100px;
+}
+
+.start_col {
+    border: 2px solid grey;
+}
+
+th.total_col {
+    background: MediumSeaGreen;
+}
+
+td.total_col {
+    background: PaleGreen;
+}
+
+.lessons_table {
+    max-width: 800px;
+    width: 96%;
+    margin: auto
+}
+
+.l_t_time {
+    width: 20%;
+}
+
+.l_t_string {
+    width: 60%;
+}
+
+.tab-pane h5 {
+    padding: 5px;
+    text-align: center;
+}
+
+.btn_r {
+    position: relative;
+    float: right;
+	right: 10%;
+}
+
+.delete_btn {
+    display: inline-block;
+    background: #f44336;
+    border: solid red 1px;
+    border-radius: 3px;
+    padding: 3px;
+    margin: 3px;
+}
+
+.edit_btn {
+    display: inline-block;
+    background: lightgrey;
+    border: solid lightblue 1px;
+    border-radius: 3px;
+    padding: 3px;
+    margin: 3px;
+}
+
+.editlink {
+    position: absolute;
+	right: 10%;
+	bottom: 10px;
+    text-decoration: underline;
+}

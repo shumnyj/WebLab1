@@ -1,0 +1,24 @@
+{% extends "./base.html" %}
+
+{% block title %} Online Library {% endblock %}
+{% block title2 %} Online Library {% endblock %}
+
+{% block content %}
+    <div class=".col-sm" style="padding-bottom:1000px">
+        <h3 style="margin: auto;"> Welcome to online library </h3>
+
+        {% if latest_books %}
+            <h4> Check out latest arrivals: </h4>
+            <div class="list-group">
+            {% for book in latest_books %}
+                <a href="{% url 'online_libr:book' book.id %}" class="list-group-item list-group-item-action">
+                    {{ book.title }}
+                </a>
+            {% endfor %}
+            </div>
+        {% else %}
+            <p>ERR</p>
+        {% endif %}
+         <p class="mytmp"> Created by Troian Borys, KV-02mp in 2021 </p>
+    </div>
+{% endblock %}

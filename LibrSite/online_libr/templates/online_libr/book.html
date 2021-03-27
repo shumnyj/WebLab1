@@ -1,0 +1,47 @@
+{% extends "./base.html" %}
+{% load static %}
+{% block title %} {{book.title}} {% endblock %}
+{% block title2 %} {{book.title}} {% endblock %}
+
+{% block content %}
+
+<div class="row">
+    {% if book %}
+    <div class="col-sm-3">
+        <div class="media-body w-100" >
+            <img src="{% static 'online_libr/ttt.jpg' %}" class="book-cover" alt="Book cover" class="mr-3 mt-3" >
+        </div>
+        <p class="ct"> Read on site: {{book.read_counter}} </p>
+    </div>
+    <div class="col-sm-9">
+        <h3 class="ct"> {{book.title}} </h3>
+        <table class="table table-borderless" style="width: 100%; max-width:300px">
+        <tbody>
+            <tr><td>Author: </td> <td>{{book.author}}</td></tr>
+            <tr><td>Publisher: </td> <td>{{book.publisher}}</td></tr>
+            <tr><td>Issued: </td><td>{{ book.published }}</td></tr>
+            <tr><td>Read status: </td><td>000</td></tr>
+        </tbody>
+        </table>
+    </div>
+</div>
+<div class="container-fluid">
+    <h4> Reviews: </h4>
+    <p> Add review </p>
+    {% for r in last_reviews %}
+        <div class="media border p-3">
+            <div class="media-body">
+                <h4>[{{ r.rating }}] - {{ r.user }} <small><i> {{ r.date }}</i></small></h4>
+                <p>{{ r.comment }}</p>
+            </div>
+        </div>
+    {% empty %}
+        <p> No reviews yet </p>
+    {% endfor %}
+</div>
+{% else %}
+    NO BOOK
+</div>
+    {% endif %}
+
+{% endblock %}

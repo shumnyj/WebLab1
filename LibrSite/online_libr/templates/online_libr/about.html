@@ -1,0 +1,12 @@
+{% extends "./base.html" %}
+
+{% block title %} About {% endblock %}
+
+{% block content %}
+<h5 class="text-center" style="padding:10px"> Welcome to online library. Here you can read and share opinions on your favourite books.</h5>
+{% if not user.is_authenticated %}
+<h5 class="text-center">To access full functionality please <a href="{% url 'online_libr:login' %}">log in</a>
+    or <a href="{% url 'online_libr:register' %}" >sign up</a> </h5>
+{% endif %}
+<p class="ct" >Website by Troian Boyrs (troian.tbv@gmail.com) 2021-2021</p>
+{% endblock %}

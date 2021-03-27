@@ -1,0 +1,15 @@
+{% extends "./base.html" %}
+
+{% block title %} Registration {% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <form method="post" action="{% url 'online_libr:register' %}" style="width:500px; max-width: 500px; margin:10px">
+    {% csrf_token %}
+    {{ form.as_bootstrap }}
+    <input type="submit" class="btn btn-primary" value="Sign up">
+
+    </form>
+</div>
+{% endblock %}

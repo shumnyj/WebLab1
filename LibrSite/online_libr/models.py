@@ -54,7 +54,7 @@ class ReadStatus(models.Model):
         constraints = [models.UniqueConstraint(fields=['user', 'book'], name='unique_status')]
 
     def __str__(self):
-        return self.book.title + ' ' + self.user.id + ' ' + self.status
+        return self.book.title + ' ' + str(self.user.id) + ' ' + self.status
 
 
 class Review(models.Model):
@@ -62,9 +62,9 @@ class Review(models.Model):
     book = models.ForeignKey(Book, related_name='reviews', on_delete=models.CASCADE, default=0)
     comment = models.CharField(max_length=400, blank=True)
     rating = models.IntegerField(default=10)
-    date = models.DateField(auto_created=True)
+    date = models.DateField(auto_now_add=True)
     # class Meta:
     # constraints = [models.UniqueConstraint(fields=['user', 'book'], name='unique_review')]
 
     def __str__(self):
-        return self.book.title + ' ' + self.user.id + ' ' + self.rating
+        return self.book.title + ' - ' + str(self.user) + ' ' + str(self.rating)

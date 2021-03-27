@@ -1,0 +1,17 @@
+{% extends "./base.html" %}
+
+{% block title %} Login page {% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <form method="post" action="{% url 'online_libr:login' %}" style="width:500px; max-width: 500px; margin:10px">
+    {% csrf_token %}
+    {{ form.as_bootstrap }}
+    <input type="submit" class="btn btn-primary" value="Log in">
+    <input type="hidden" name="next" value="{{ next }}">
+    </form>
+    {# <p><a href="#">Lost password?</a></p> #}
+
+</div>
+{% endblock %}

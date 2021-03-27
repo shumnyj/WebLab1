@@ -72,6 +72,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'LibrSite.wsgi.application'
 
 
+
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
@@ -80,7 +81,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'library_db',
         'USER': 'postgres',
-        'PASSWORD': '111',
+        'PASSWORD': '4950',
         'HOST': '127.0.0.1',
         'PORT': '5445',
     },
@@ -124,3 +125,5 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+LOGIN_REDIRECT_URL = "online_libr:index"

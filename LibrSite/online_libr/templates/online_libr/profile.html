@@ -1,0 +1,37 @@
+{% extends "./base.html" %}
+
+{% block title %} Profile {% endblock %}
+
+{% block content %}
+    {% if base_user and lib_user %}
+    <table class=" table ">
+        <tr>
+            <td>Username:</td>
+            <td>{{base_user.username}}</td>
+        </tr>
+        <tr>
+            <td>E-mail:</td>
+            <td>{{base_user.email}}</td>
+        </tr>
+        <tr>
+            <td>First name:</td>
+            <td>{{base_user.first_name}}</td>
+        </tr>
+        <tr>
+            <td>Last Name:</td>
+            <td>{{base_user.last_name}}</td>
+        </tr>
+        <tr>
+            <td>Sex:</td>
+            <td>{{lib_user.sex}}</td>
+        </tr>
+        <tr>
+            <td>Birthday:</td>
+            <td>{{lib_user.birth_date}}</td>
+        </tr>
+    </table>
+    <a class="btn btn-primary" href="{% url 'online_libr:profile_edit' %}" > Edit profile </a>
+    <a class="btn btn-secondary" href="{% url 'online_libr:logout' %}">Logout</a>
+    {% endif %}
+{% endblock %}
+

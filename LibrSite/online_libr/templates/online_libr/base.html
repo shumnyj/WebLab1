@@ -6,44 +6,52 @@
     <meta charset="UTF-8">
 
     {% load static %}
+
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <!-- <link rel="stylesheet" type="text/css" href="{% static 'workspace/general.css' %}"> -->
+    <link rel="stylesheet" type="text/css" href="{% static 'online_libr/common.css' %}">
+    <!-- <link rel="stylesheet" type="text/css" href="{% static 'online_libr/general.css' %}"> -->
     {% block scr %} {% endblock %}
 </head>
 <body>
 <!-- <h2 class="header">{% block title2 %}Base Page{% endblock %}</h2> -->
-<div class="container">
-    <nav class="navbar navbar-expand-sm bg-success justify-content-center ">
-        <a class="navbar-brand " href="{% url 'online_libr:index' %}">Online Library</a>
+<div class="container w-100">
+    <nav class="navbar navbar-expand-sm bg-success justify-content-between sticky-top" >
+        <a class="navbar-brand "  href="{% url 'online_libr:index' %}">Online Library</a>
         <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'online_libr:browse' %}">Browse</a>
+            </li>
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'online_libr:book' 1 %}">Search</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">About</a>
+              <a class="nav-link" href="{% url 'online_libr:about' %}">About</a>
             </li>
-            {% if not user.is_authenticated %}
+      </ul>
+        <ul class="navbar-nav" style="float:right">
+            {% if user.is_authenticated %}
             <li class="nav-item">
-              <a class="nav-link" href="#">Profile</a>
+              <a class="nav-link" href="{% url 'online_libr:profile' request.user.id %}">Profile</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Exit</a>
+              <a class="nav-link" href="{% url 'online_libr:logout' %}">Exit</a>
             </li>
             {% else %}
             <li class="nav-item">
-              <a class="nav-link" href="#">Login</a>
+              <a class="nav-link" href="{% url 'online_libr:login' %}">Login</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Register</a>
+            <li class="nav-item" style="right:10%">
+              <a class="nav-link" href="{% url 'online_libr:register' %}">Register</a>
             </li>
             {% endif %}
       </ul>
     </nav>
     <!-- bar -->
-    <div class="container-fluid">
-            {% block content %} err {% endblock %}
+    <div style="margin:10px"></div>
+    <div class="container-fluid" style=" padding-bottom:700px">
+        {% block content %} Err {% endblock %}
     </div>
-    <footer></footer>
+    <footer>Created by Troian Borys, KV-02mp in 2021</footer>
 </div>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>

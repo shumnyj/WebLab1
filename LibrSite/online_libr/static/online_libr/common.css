@@ -1,0 +1,15 @@
+.ct {
+    text-align: center;
+}
+
+.alert ul{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.book-cover {
+    background: purple;
+    object-fit: cover;
+    object-position: 0 0;
+}

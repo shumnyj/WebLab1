@@ -3,6 +3,13 @@ from django.conf import settings
 from datetime import date
 
 
+def get_range_choices(xmax, xmin=1):
+    range_choices = list()
+    for x in range(xmin, xmax+1):
+        range_choices.append((x, x))
+    return range_choices
+
+
 class LibUser(models.Model):
     """
         Extension of :model:`auth.User`
@@ -61,10 +68,11 @@ class Review(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='reviews', on_delete=models.CASCADE, default=0)
     book = models.ForeignKey(Book, related_name='reviews', on_delete=models.CASCADE, default=0)
     comment = models.CharField(max_length=400, blank=True)
-    rating = models.IntegerField(default=10)
-    date = models.DateField(auto_now_add=True)
-    # class Meta:
-    # constraints = [models.UniqueConstraint(fields=['user', 'book'], name='unique_review')]
+    rating = models.IntegerField(default=10, choices=get_range_choices(10))
+    date = models.DateField(auto_now=True)
+
+    class Meta:
+        constraints = [models.UniqueConstraint(fields=['user', 'book'], name='unique_review')]
 
     def __str__(self):
         return self.book.title + ' - ' + str(self.user) + ' ' + str(self.rating)

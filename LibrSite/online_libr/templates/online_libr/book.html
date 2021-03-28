@@ -7,31 +7,72 @@
 
 <div class="row">
     {% if book %}
-    <div class="col-sm-3">
+    <div class="col-sm-4">
         <div class="media-body w-100" >
-            <img src="{% static 'online_libr/ttt.jpg' %}" class="book-cover" alt="Book cover" class="mr-3 mt-3" >
+            <img src="{% static 'online_libr/ttt.jpg' %}" class="book-cover" alt="Book cover" class="mr-3 mt-3"
+                style="object-fit: contain;">
         </div>
         <p class="ct"> Read on site: {{book.read_counter}} </p>
     </div>
-    <div class="col-sm-9">
+    <div class="col-sm-8">
         <h3 class="ct"> {{book.title}} </h3>
-        <table class="table table-borderless" style="width: 100%; max-width:300px">
+        <table class="table table-borderless" style="width: 100%;">
         <tbody>
             <tr><td>Author: </td> <td>{{book.author}}</td></tr>
             <tr><td>Publisher: </td> <td>{{book.publisher}}</td></tr>
-            <tr><td>Issued: </td><td>{{ book.published }}</td></tr>
-            <tr><td>Read status: </td><td>000</td></tr>
+            <tr><td>Issued: </td><td>{{ book.pub_date | date:"Y" }}</td></tr>
+            <tr>
+                <td>Read status: </td>
+                {% if form_status %}
+                <td>
+                    <form action="{% url 'online_libr:book' book.id %}" method="post" class="form-inline">
+                        {% csrf_token %}
+                        {{ form_status.status }}
+                        <input class = "btn btn-info" type="submit" name="chagestatus" value="Change status">
+                    </form>
+                    {% if user_status %}
+                    <p> Last change: {{ user_status.date }}</p>
+                    {% endif %}
+                </td>
+                {% else %}
+                <td> ERROR </td>
+                {% endif %}
+            </tr>
         </tbody>
         </table>
     </div>
 </div>
 <div class="container-fluid">
+    {% if message %}
+    <div class="alert alert-info"> {{ message }} </div>
+    {% endif %}
+    {% if form_review %}
+    <div class="container border">
+        <p> Add review </p>
+        <form method="post" action="{% url 'online_libr:book' book.id %}">
+            {% csrf_token %}
+            {{ form_review.as_bootstrap }}
+            <input type="submit" class="btn btn-primary" name="addreview" value="Add review">
+        </form>
+    </div>
+    {% elif user_review %}
+    <div>
+        <p> Your review </p>
+        <div class="media border p-3">
+            <div class="media-body">
+                <h5>[{{ user_review.rating }}] <small><i> {{ user_review.date }}</i></small></h5>
+                <p>{{ user_review.comment }}</p>
+            </div>
+            <a href="#"> Edit </a>
+        </div>
+    </div>
+    {% endif %}
+
     <h4> Reviews: </h4>
-    <p> Add review </p>
     {% for r in last_reviews %}
         <div class="media border p-3">
             <div class="media-body">
-                <h4>[{{ r.rating }}] - {{ r.user }} <small><i> {{ r.date }}</i></small></h4>
+                <h5>[{{ r.rating }}] - {{ r.user }} <small><i> {{ r.date }}</i></small></h5>
                 <p>{{ r.comment }}</p>
             </div>
         </div>
@@ -42,6 +83,6 @@
 {% else %}
     NO BOOK
 </div>
-    {% endif %}
+{% endif %}
 
 {% endblock %}

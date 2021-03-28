@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse, reverse_lazy
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden, HttpResponseBadRequest
 from django.contrib.auth import login, logout, views as auth_views, models as auth_models
-from django.views.generic import DetailView, FormView
+from django.views.generic import DetailView, FormView, View
 from django.db.utils import IntegrityError
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
@@ -35,16 +35,70 @@ def browse_view(request):
     return render(request, "online_libr/browse.html", context)
 
 
-def book_view(request, book_id):
+"""def book_view(request, book_id):
     book = get_object_or_404(olm.Book, pk=book_id)
     last_reviews = book.reviews.all().order_by('date')[:4]
     context = {'book': book, 'last_reviews': last_reviews}
     return render(request, "online_libr/book.html", context)
-    # return HttpResponse("Certain book page = {}".format(book_id))
+    # return HttpResponse("Certain book page = {}".format(book_id))"""
 
 
-def profile_view(request, user_id):
-    return HttpResponse("Certain user profile")
+class BookView(View):
+    template_name = "online_libr/book.html"
+
+    form_review = olf.ReviewForm
+    form_status = olf.ReadStatusForm
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name, self._common_context(request))
+
+    def post(self, request, *args, **kwargs):
+        context = dict()
+        # could split into 2 views
+        book = get_object_or_404(olm.Book, pk=self.kwargs['book_id'])
+        if 'chagestatus' in request.POST:           # checking which form is it (not secure?)
+            # modify or add if don't exist
+            try:
+                obj = olm.ReadStatus.objects.filter(user=request.user).get(book=book)
+                form = self.form_status(request.POST, instance=obj)
+            except (KeyError, olm.Review.DoesNotExist):
+                form = self.form_status(request.POST)
+        elif 'addreview' in request.POST:
+            form = self.form_review(request.POST)
+        else:
+            form = None
+        if form and form.is_valid():
+            obj = form.save(commit=False)
+            obj.user = request.user
+            obj.book = book
+            try:
+                obj.save()
+                # context['message'] = "Changes successful"
+                return HttpResponseRedirect(reverse("online_libr:book", args=[book.id]))
+            except IntegrityError:
+                context['message'] = "Invalid form: integrity error"
+        context.update(self._common_context(request))
+        return render(request, self.template_name, context)
+
+    def _common_context(self, request):
+        context = dict()
+        book = get_object_or_404(olm.Book, pk=self.kwargs['book_id'])
+
+        if request.user.is_authenticated:
+            try:
+                tmp = olm.Review.objects.filter(user=request.user).get(book=book)
+                context['user_review'] = tmp
+            except olm.Review.DoesNotExist:
+                context['form_review'] = self.form_review()
+            try:
+                tmp = olm.ReadStatus.objects.filter(user=request.user).get(book=book)
+                context['user_status'] = tmp
+                context['form_status'] = self.form_status(instance=tmp)
+            except olm.ReadStatus.DoesNotExist:
+                context['form_status'] = self.form_status()
+        context['book'] = book
+        context['last_reviews'] = book.reviews.all().order_by('-date')[:4]
+        return context
 
 
 def profile_edit_view(request):

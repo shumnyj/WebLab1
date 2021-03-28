@@ -15,6 +15,7 @@ from . import models as olm
             return ''
         return '<div class="alert alert-danger">%s</div>' % ''.join(['<div class="error">%s</div>' % e for e in self])"""
 
+
 class BootstrapFormMixin(forms.BaseForm):
     def as_bootstrap(self):
         """Return this form rendered as bootstrap 4 stacked form."""
@@ -73,3 +74,18 @@ class MyRegisterForm(forms.Form, BootstrapFormMixin):
         if pwd1 != pwd2:
             raise forms.ValidationError('Passwords do not match')
         return pwd2
+
+
+class ReviewForm(forms.ModelForm, BootstrapFormMixin):
+
+    class Meta:
+        model = olm.Review
+        fields = ['rating', 'comment']
+        widgets = {'comment': forms.Textarea(attrs={'class': 'textarea', 'cols': False, 'rows': False})}
+
+
+class ReadStatusForm(forms.ModelForm):
+    class Meta:
+        model = olm.ReadStatus
+        fields = ['status']
+

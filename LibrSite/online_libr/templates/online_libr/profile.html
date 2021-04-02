@@ -30,8 +30,10 @@
             <td>{{lib_user.birth_date}}</td>
         </tr>
     </table>
-    <a class="btn btn-primary" href="{% url 'online_libr:profile_edit' %}" > Edit profile </a>
-    <a class="btn btn-secondary" href="{% url 'online_libr:logout' %}">Logout</a>
+    {% if user.is_authenticated and user.id == base_user.id %}
+        <a class="btn btn-primary" href="{% url 'online_libr:profile_edit' %}" > Edit profile </a>
+        <a class="btn btn-secondary" href="{% url 'online_libr:logout' %}">Logout</a>
+    {% endif %}
     {% endif %}
 {% endblock %}
 

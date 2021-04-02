@@ -1,15 +1,24 @@
-from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse, reverse_lazy
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden, HttpResponseBadRequest
-from django.contrib.auth import login, logout, views as auth_views, models as auth_models
-from django.views.generic import DetailView, FormView, View
+from django.shortcuts import get_object_or_404, render, redirect
 from django.db.utils import IntegrityError
-from django.conf import settings
+
+from django.contrib.auth import login, logout, views as auth_views, models as auth_models
 from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.views.generic import DetailView, FormView, View, UpdateView
+from django.forms.models import model_to_dict
+
 from django.views.decorators.csrf import csrf_exempt
+from django.conf import settings
 
 from . import models as olm
 from . import forms as olf
+
+from rest_framework import routers, viewsets, permissions, response, status
+from rest_framework.decorators import action
+from .serializers import (IsAdminOrReadOnly, IsCreatorOrReadOnly,
+                          ReviewSerializer, StatusSerializer, UserSerializer, BookSerializer)
 # import online_libr.models as olm
 
 
@@ -52,6 +61,7 @@ class BookView(View):
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name, self._common_context(request))
 
+    @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         context = dict()
         # could split into 2 views
@@ -61,7 +71,7 @@ class BookView(View):
             try:
                 obj = olm.ReadStatus.objects.filter(user=request.user).get(book=book)
                 form = self.form_status(request.POST, instance=obj)
-            except (KeyError, olm.Review.DoesNotExist):
+            except (KeyError, olm.ReadStatus.DoesNotExist):
                 form = self.form_status(request.POST)
         elif 'addreview' in request.POST:
             form = self.form_review(request.POST)
@@ -145,12 +155,6 @@ def logout_view(request):
     return HttpResponseRedirect(reverse("online_libr:index"))
 
 
-"""class MyRegisterView(auth_views.Re):
-    template_name = "online_libr/register.html"
-    redirect_field_name = "next"
-    form_class = olf.MyAuthForm"""
-
-
 class ProfileView(DetailView):
     model = auth_models.User
     context_object_name = 'base_user'
@@ -161,3 +165,101 @@ class ProfileView(DetailView):
         context['lib_user'] = super().get_object().libuser
         return context
 
+
+class ProfileUpdate(FormView):
+    template_name = "online_libr/edit_profile.html"
+    form_class = olf.UpdateProfileForm
+    success_url = reverse_lazy("online_libr:index")
+
+    def get_form(self, form_class=None):
+        if form_class is None:
+            form_class = self.get_form_class()
+        try:
+            u = auth_models.User.objects.get(pk=self.request.user.pk)
+            return form_class(instance=u, **self.get_form_kwargs())
+        except auth_models.User.DoesNotExist:
+            return form_class(**self.get_form_kwargs())
+
+    def get_initial(self):
+        # self.initial = model_to_dict(self.request.user, exclude=['password'])
+        self.initial.update(model_to_dict(self.request.user.libuser))
+        return self.initial.copy()
+
+    def get_success_url(self):
+        """Return the URL to redirect to after processing a valid form."""
+        try:
+            self.success_url = reverse_lazy("online_libr:profile", kwargs={'pk': self.request.user.id})
+        except IntegrityError:
+            print("get success_url failed")
+        return str(self.success_url)
+
+    def form_valid(self, form):
+        # form.instance = self.request.user # not needed
+        form.save()
+        self.request.user.libuser.sex = form.cleaned_data['sex']
+        self.request.user.libuser.birth_date = form.cleaned_data['birth_date']
+        self.request.user.libuser.save()
+        return super(ProfileUpdate, self).form_valid(form)
+
+
+# api views
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = auth_models.User.objects.filter(is_active=True)
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAdminUser]
+    http_method_names = ['get']
+
+
+class BookViewSet(viewsets.ModelViewSet):
+    queryset = olm.Book.objects.all()
+    serializer_class = BookSerializer
+    permission_classes = [IsAdminOrReadOnly]
+
+    @action(methods=['get'], detail=True, permission_classes=[permissions.IsAuthenticatedOrReadOnly])
+    def reviews(self, request, pk=None):
+        try:
+            book = olm.Book.objects.get(id=pk)
+        except olm.Book.DoesNotExist:
+            return response.Response({"error": "Book not found."}, status=status.HTTP_400_BAD_REQUEST)
+        res = book.reviews.all()
+        return response.Response(ReviewSerializer(res, context={'request': request}, many=True).data)
+
+    @action(methods=['get'], detail=True, permission_classes=[permissions.IsAuthenticatedOrReadOnly])
+    def statuses(self, request, pk=None):
+        try:
+            book = olm.Book.objects.get(id=pk)
+        except olm.Book.DoesNotExist:
+            return response.Response({"error": "Book not found."}, status=status.HTTP_400_BAD_REQUEST)
+        res = book.statuses.all()
+        return response.Response(StatusSerializer(res, context={'request': request}, many=True).data)
+
+""" def get_serializer_class(self):
+        return self.serializers.get(self.action, self.serializers['default'])
+
+    serializers = {
+        'default': BookSerializer,
+        'reviews': ReviewSerializer,
+        'statuses': StatusSerializer,
+    }"""
+
+
+class ReviewViewSet(viewsets.ModelViewSet):
+    queryset = olm.Review.objects.all()
+    serializer_class = ReviewSerializer
+    permission_classes = [IsCreatorOrReadOnly]
+
+
+class StatusViewSet(viewsets.ModelViewSet):
+    queryset = olm.ReadStatus.objects.all()
+    serializer_class = StatusSerializer
+    permission_classes = [IsCreatorOrReadOnly]
+    http_method_names = ['get', 'post', 'put', 'patch']
+
+
+ApiRouter = routers.DefaultRouter()
+ApiRouter.register(r'books', BookViewSet)
+ApiRouter.register(r'users', UserViewSet)
+ApiRouter.register(r'reviews', ReviewViewSet)
+ApiRouter.register(r'statuses', StatusViewSet)

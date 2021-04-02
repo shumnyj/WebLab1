@@ -57,7 +57,7 @@ class MyRegisterForm(forms.Form, BootstrapFormMixin):
     email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control'}))
     first_name = forms.CharField(max_length=128, widget=forms.TextInput(attrs={'class': 'form-control'}))
     last_name = forms.CharField(max_length=128, widget=forms.TextInput(attrs={'class': 'form-control'}))
-    sex = forms.ChoiceField(choices=olm.LibUser.SEX_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
+    sex = forms.ChoiceField(choices=olm.SEX_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
     birth_date = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control', 'placeholder': 'YYYY-MM-DD'}))
 
     def clean_username(self):
@@ -80,7 +80,7 @@ class ReviewForm(forms.ModelForm, BootstrapFormMixin):
 
     class Meta:
         model = olm.Review
-        fields = ['rating', 'comment']
+        fields = ['comment', 'rating']
         widgets = {'comment': forms.Textarea(attrs={'class': 'textarea', 'cols': False, 'rows': False})}
 
 
@@ -89,3 +89,22 @@ class ReadStatusForm(forms.ModelForm):
         model = olm.ReadStatus
         fields = ['status']
 
+
+class UpdateProfileForm(forms.ModelForm, BootstrapFormMixin):
+    sex = forms.ChoiceField(choices=olm.SEX_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
+    birth_date = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control', 'placeholder': 'YYYY-MM-DD'}))
+
+    class Meta:
+        model = auth_models.User
+        fields = ['username', 'first_name', 'last_name', 'email', 'sex', 'birth_date']
+        widgets = {'username': forms.TextInput(attrs={'autofocus': True, 'class': 'form-control'}),
+                   'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+                   'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+                   'email': forms.EmailInput(attrs={'class': 'form-control'})}
+
+    """def save(self, commit=True):  # if i want to use in UpdateView
+        # libuser = olm.LibUser.objects.get(pk=self.instance.libuser.pk)
+        self.instance.libuser.sex = self.cleaned_data['sex']
+        self.instance.libuser.birth_date = self.cleaned_data['birth_date']
+        self.instance.libuser.save(commit)  # if commit=False?
+        super(UpdateProfileForm, self).save(commit)"""

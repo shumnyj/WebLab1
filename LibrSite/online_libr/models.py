@@ -2,6 +2,13 @@ from django.db import models
 from django.conf import settings
 from datetime import date
 
+SEX_CHOICES = [
+        ('M', 'Male'),
+        ('F', 'Female'),
+        ('U', 'Unknown'),
+        ('O', 'Other'),
+    ]
+
 
 def get_range_choices(xmax, xmin=1):
     range_choices = list()
@@ -14,14 +21,9 @@ class LibUser(models.Model):
     """
         Extension of :model:`auth.User`
     """
-    SEX_CHOICES = [
-        ('M', 'Male'),
-        ('F', 'Female'),
-        ('U', 'Unknown'),
-        ('O', 'Other'),
-    ]
+
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
-                                related_name='libuser', default=0)
+                                related_name='libuser', default=0, editable=False)
     sex = models.CharField(max_length=2, choices=SEX_CHOICES, default='U')
     birth_date = models.DateField(blank=True, null=True,)
 
@@ -52,8 +54,9 @@ class ReadStatus(models.Model):
         ('U', 'Unread'),
         ('R', 'Reading')
     ]
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='statuses', on_delete=models.CASCADE, default=0)
-    book = models.ForeignKey(Book, related_name='statuses', on_delete=models.CASCADE, default=0)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='statuses',
+                             on_delete=models.CASCADE, default=0, editable=False)
+    book = models.ForeignKey(Book, related_name='statuses', on_delete=models.CASCADE, default=0, editable=False)
     status = models.CharField(max_length=2, choices=STATUS_CHOICES, default='U')
     date = models.DateField(auto_now=True)
 
@@ -65,8 +68,9 @@ class ReadStatus(models.Model):
 
 
 class Review(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='reviews', on_delete=models.CASCADE, default=0)
-    book = models.ForeignKey(Book, related_name='reviews', on_delete=models.CASCADE, default=0)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='reviews',
+                             on_delete=models.CASCADE, default=0, editable=False)
+    book = models.ForeignKey(Book, related_name='reviews', on_delete=models.CASCADE, default=0, editable=False)
     comment = models.CharField(max_length=400, blank=True)
     rating = models.IntegerField(default=10, choices=get_range_choices(10))
     date = models.DateField(auto_now=True)

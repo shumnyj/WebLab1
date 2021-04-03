@@ -1,4 +1,4 @@
-from rest_framework import serializers,  permissions
+from rest_framework import serializers,  permissions, validators
 
 from django.contrib.auth.models import User
 from . import models as olm
@@ -42,21 +42,29 @@ class BookSerializer(serializers.HyperlinkedModelSerializer):
 class ReviewSerializer(serializers.HyperlinkedModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="online_libr:review-detail")
     # user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
-    # book = serializers.PrimaryKeyRelatedField(queryset=olm.Book.objects.all())
-    user = serializers.HyperlinkedRelatedField(view_name="online_libr:user-detail", queryset=User.objects.all())  # read_only=True
-    book = serializers.HyperlinkedRelatedField(view_name="online_libr:book-detail", queryset=olm.Book.objects.all())  # read_only=True
+    user = serializers.HyperlinkedRelatedField(view_name="online_libr:user-detail", read_only=True)
+    book = serializers.HyperlinkedRelatedField(view_name="online_libr:book-detail", read_only=True)
 
     class Meta:
         model = olm.Review
         fields = ['url', 'id', 'user', 'book', 'rating', 'comment']  #
 
 
+class ReviewSerializerPost(ReviewSerializer):
+    # user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    book = serializers.PrimaryKeyRelatedField(queryset=olm.Book.objects.all())
+
+
 class StatusSerializer(serializers.HyperlinkedModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="online_libr:readstatus-detail")
-    user = serializers.HyperlinkedRelatedField(view_name="online_libr:user-detail", queryset=User.objects.all())
-    book = serializers.HyperlinkedRelatedField(view_name="online_libr:book-detail", queryset=olm.Book.objects.all())
+    user = serializers.HyperlinkedRelatedField(view_name="online_libr:user-detail", read_only=True)  # default=serializers.CurrentUserDefault()
+    book = serializers.HyperlinkedRelatedField(view_name="online_libr:book-detail", read_only=True)
 
     class Meta:
         model = olm.ReadStatus
         fields = ['url', 'id', 'user', 'book', 'status', 'date']  #
 
+
+class StatusSerializerPost(StatusSerializer):
+    # user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    book = serializers.PrimaryKeyRelatedField(queryset=olm.Book.objects.all())

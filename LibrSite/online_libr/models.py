@@ -80,3 +80,4 @@ class Review(models.Model):
 
     def __str__(self):
         return self.book.title + ' - ' + str(self.user) + ' ' + str(self.rating)
+

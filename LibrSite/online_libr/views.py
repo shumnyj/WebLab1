@@ -9,6 +9,7 @@ from django.utils.decorators import method_decorator
 from django.views.generic import DetailView, FormView, View, UpdateView
 from django.forms.models import model_to_dict
 
+
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 
@@ -17,7 +18,8 @@ from . import forms as olf
 
 from rest_framework import routers, viewsets, permissions, response, status
 from rest_framework.decorators import action
-from .serializers import (IsAdminOrReadOnly, IsCreatorOrReadOnly,
+from rest_framework.exceptions import ParseError
+from .serializers import (IsAdminOrReadOnly, IsCreatorOrReadOnly, ReviewSerializerPost, StatusSerializerPost,
                           ReviewSerializer, StatusSerializer, UserSerializer, BookSerializer)
 # import online_libr.models as olm
 
@@ -217,7 +219,7 @@ class BookViewSet(viewsets.ModelViewSet):
     serializer_class = BookSerializer
     permission_classes = [IsAdminOrReadOnly]
 
-    @action(methods=['get'], detail=True, permission_classes=[permissions.IsAuthenticatedOrReadOnly])
+    @action(methods=['get', 'post'], detail=True, permission_classes=[permissions.IsAuthenticatedOrReadOnly])
     def reviews(self, request, pk=None):
         try:
             book = olm.Book.objects.get(id=pk)
@@ -226,7 +228,7 @@ class BookViewSet(viewsets.ModelViewSet):
         res = book.reviews.all()
         return response.Response(ReviewSerializer(res, context={'request': request}, many=True).data)
 
-    @action(methods=['get'], detail=True, permission_classes=[permissions.IsAuthenticatedOrReadOnly])
+    @action(methods=['get', 'post'], detail=True, permission_classes=[permissions.IsAuthenticatedOrReadOnly])
     def statuses(self, request, pk=None):
         try:
             book = olm.Book.objects.get(id=pk)
@@ -235,27 +237,64 @@ class BookViewSet(viewsets.ModelViewSet):
         res = book.statuses.all()
         return response.Response(StatusSerializer(res, context={'request': request}, many=True).data)
 
-""" def get_serializer_class(self):
+    def get_serializer_class(self):
         return self.serializers.get(self.action, self.serializers['default'])
 
     serializers = {
         'default': BookSerializer,
-        'reviews': ReviewSerializer,
-        'statuses': StatusSerializer,
-    }"""
+        'reviews': ReviewSerializerPost,
+        'statuses': StatusSerializerPost,
+    }
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = olm.Review.objects.all()
     serializer_class = ReviewSerializer
     permission_classes = [IsCreatorOrReadOnly]
+    http_method_names = ['get', 'post', 'patch']
+
+    def get_serializer_class(self):
+        return self.serializers.get(self.action, self.serializers['default'])
+
+    serializers = {
+        'default': ReviewSerializer,
+        'create': ReviewSerializerPost,
+    }
+
+    def perform_create(self, serializer):
+            serializer.save(user=self.request.user)
+
+    def create(self, validated_data):
+        #validated_data['user'] = self.request.user
+        try:
+            return super(ReviewViewSet, self).create(validated_data)
+        except IntegrityError:
+            raise ParseError(detail="Unique together constraint on ['user', 'book'] is probably violated")
 
 
 class StatusViewSet(viewsets.ModelViewSet):
     queryset = olm.ReadStatus.objects.all()
     serializer_class = StatusSerializer
     permission_classes = [IsCreatorOrReadOnly]
-    http_method_names = ['get', 'post', 'put', 'patch']
+    http_method_names = ['get', 'post', 'patch']
+
+    def get_serializer_class(self):
+        return self.serializers.get(self.action, self.serializers['default'])
+
+    serializers = {
+        'default': StatusSerializer,
+        'create': StatusSerializerPost,
+    }
+
+    def perform_create(self, serializer):
+            serializer.save(user=self.request.user)
+
+    def create(self, validated_data):
+        # validated_data['user'] = self.request.user
+        try:
+            return super(StatusViewSet, self).create(validated_data)
+        except IntegrityError:
+            raise ParseError(detail="Unique together constraint on ['user', 'book'] is probably violated")
 
 
 ApiRouter = routers.DefaultRouter()

@@ -15,7 +15,6 @@ schema_view = get_schema_view(
       description="Redoc api for online library app",
       contact=openapi.Contact(email="troian.tbv@gmail.com"),
       license=openapi.License(name="BSD License"),
-    # terms_of_service="https://www.google.com/pol  icies/terms/",
    ),
    public=True,
    permission_classes=[permissions.AllowAny],

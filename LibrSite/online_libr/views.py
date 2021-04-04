@@ -9,8 +9,6 @@ from django.utils.decorators import method_decorator
 from django.views.generic import DetailView, FormView, View, UpdateView
 from django.forms.models import model_to_dict
 
-
-from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 
 from . import models as olm
@@ -21,7 +19,6 @@ from rest_framework.decorators import action
 from rest_framework.exceptions import ParseError
 from .serializers import (IsAdminOrReadOnly, IsCreatorOrReadOnly, ReviewSerializerPost, StatusSerializerPost,
                           ReviewSerializer, StatusSerializer, UserSerializer, BookSerializer)
-# import online_libr.models as olm
 
 
 def index_view(request):
@@ -219,7 +216,7 @@ class BookViewSet(viewsets.ModelViewSet):
     serializer_class = BookSerializer
     permission_classes = [IsAdminOrReadOnly]
 
-    @action(methods=['get', 'post'], detail=True, permission_classes=[permissions.IsAuthenticatedOrReadOnly])
+    @action(methods=['get'], detail=True, permission_classes=[permissions.IsAuthenticatedOrReadOnly])
     def reviews(self, request, pk=None):
         try:
             book = olm.Book.objects.get(id=pk)
@@ -228,7 +225,7 @@ class BookViewSet(viewsets.ModelViewSet):
         res = book.reviews.all()
         return response.Response(ReviewSerializer(res, context={'request': request}, many=True).data)
 
-    @action(methods=['get', 'post'], detail=True, permission_classes=[permissions.IsAuthenticatedOrReadOnly])
+    @action(methods=['get'], detail=True, permission_classes=[permissions.IsAuthenticatedOrReadOnly])
     def statuses(self, request, pk=None):
         try:
             book = olm.Book.objects.get(id=pk)
@@ -251,7 +248,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
     queryset = olm.Review.objects.all()
     serializer_class = ReviewSerializer
     permission_classes = [IsCreatorOrReadOnly]
-    http_method_names = ['get', 'post', 'patch']
+    http_method_names = ['get', 'post', 'patch', 'delete']
 
     def get_serializer_class(self):
         return self.serializers.get(self.action, self.serializers['default'])
@@ -276,7 +273,7 @@ class StatusViewSet(viewsets.ModelViewSet):
     queryset = olm.ReadStatus.objects.all()
     serializer_class = StatusSerializer
     permission_classes = [IsCreatorOrReadOnly]
-    http_method_names = ['get', 'post', 'patch']
+    http_method_names = ['get', 'post', 'patch', 'delete']
 
     def get_serializer_class(self):
         return self.serializers.get(self.action, self.serializers['default'])

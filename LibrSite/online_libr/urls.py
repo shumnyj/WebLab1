@@ -4,21 +4,22 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework.schemas import get_schema_view as gsv
+from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView
 
 from . import views
 from .views import ApiRouter
 
-schema_view = get_schema_view(
-   openapi.Info(
+"""schema_view = get_schema_view(
+    openapi.Info(
       title="Online Library API",
       default_version='v1',
       description="Redoc api for online library app",
       contact=openapi.Contact(email="troian.tbv@gmail.com"),
       license=openapi.License(name="BSD License"),
-   ),
-   public=True,
-   permission_classes=[permissions.AllowAny],
-)
+    ),
+    public=True,
+    permission_classes=[permissions.AllowAny],
+)"""
 
 
 app_name = 'online_libr'
@@ -37,7 +38,11 @@ urlpatterns = [
 
     path('api/', include(ApiRouter.urls)),
 
-    path(r'api/redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+    # path(r'api/schema/redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+    # path(r'api/schema/', schema_view.without_ui(cache_timeout=0), name='schema'),   # debug
+
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='online_libr:schema'), name='redoc'),
 
 ]
 """path(r'api/openapi/', gsv(
@@ -46,4 +51,5 @@ urlpatterns = [
         version="1.0.0",
         patterns=ApiRouter.urls,
         urlconf='online_libr.urls'
+
     ), name='openapi-schema'),"""

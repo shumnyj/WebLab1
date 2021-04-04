@@ -39,7 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'drf_yasg',
+    'drf_spectacular',
     'online_libr',
+
 ]
 
 MIDDLEWARE = [
@@ -132,9 +134,28 @@ LOGIN_REDIRECT_URL = "online_libr:index"
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
+
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ],
+
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10
+    'PAGE_SIZE': 10,
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'SCHEMA_PATH_PREFIX': r'/api',
+
+    'TITLE': "Online Library API",
+    'DESCRIPTION': "Redoc api for online library app",
+    'TOS': None,
+    # Optional: MAY contain "name", "url", "email"
+    'CONTACT': {'email': "troian.tbv@gmail.com", 'name': "Troian Borys"},
+    # Optional: MUST contain "name", MAY contain URL
+    'LICENSE': {'name': "BSD License"},
+    # Statically set schema version. May also be an empty string. When used together with
+    # view versioning, will become '0.0.0 (v2)' for 'v2' versioned requests.
+    # Set VERSION to None if only the request version should be rendered.
+    'VERSION': '1.0.2',
 }

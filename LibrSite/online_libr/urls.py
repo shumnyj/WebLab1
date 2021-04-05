@@ -28,7 +28,9 @@ urlpatterns = [
     path(r'', views.index_view, name='index'),
     path('book/<int:book_id>', views.BookView.as_view(), name='book'),
     path('profile/<int:pk>', views.ProfileView.as_view(), name='profile'),
+    path('profile/<int:pk>/reviews', views.UserReviewsView.as_view(), name='user_reviews'),
     path('profile/edit', views.ProfileUpdate.as_view(), name='profile_edit'),
+    path('search', views.search_view, name='search'),
     path('browse', views.browse_view, name='browse'),
     path('about', views.about_view, name='about'),
 
@@ -36,7 +38,7 @@ urlpatterns = [
     path('logout', views.logout_view, name='logout'),
     path('register', views.RegisterView.as_view(), name='register'),
 
-    path('api/', include(ApiRouter.urls)),
+    path(r'api/', include((ApiRouter.urls, ''))),
 
     # path(r'api/schema/redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     # path(r'api/schema/', schema_view.without_ui(cache_timeout=0), name='schema'),   # debug

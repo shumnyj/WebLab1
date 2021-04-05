@@ -36,6 +36,9 @@ class Book(models.Model):
     author = models.CharField(max_length=200)
     publisher = models.CharField(max_length=200, default="Unknown")
     pub_date = models.DateField(default="1998-08-06", null=True, blank=True)
+    description = models.CharField(max_length=500, default="", blank=True)
+    # rating = models.DecimalField(default=0, editable=False, decimal_places=2, max_digits=5)
+    rating = models.FloatField(default=0, editable=False)
     read_counter = models.IntegerField(default=0, editable=False)
     added = models.DateField(auto_now_add=True)
 
@@ -51,7 +54,7 @@ class ReadStatus(models.Model):
         ('P', 'Planned'),
         ('C', 'Completed'),
         ('D', 'Dropped'),
-        ('U', 'Unread'),
+        # ('U', 'Unread'),
         ('R', 'Reading')
     ]
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='statuses',
@@ -62,6 +65,7 @@ class ReadStatus(models.Model):
 
     class Meta:
         constraints = [models.UniqueConstraint(fields=['user', 'book'], name='unique_status')]
+        ordering = ['status']
 
     def __str__(self):
         return self.book.title + ' ' + str(self.user.id) + ' ' + self.status

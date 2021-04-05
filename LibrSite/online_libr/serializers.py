@@ -36,7 +36,7 @@ class BookSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = olm.Book
-        fields = ['url', 'id', 'title', 'author', 'publisher', 'pub_date', 'reviews']
+        fields = ['url', 'id', 'title', 'author', 'publisher', 'pub_date', 'description', 'rating', 'reviews']
 
 
 class ReviewSerializer(serializers.HyperlinkedModelSerializer):

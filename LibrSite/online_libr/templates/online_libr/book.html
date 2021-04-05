@@ -38,6 +38,9 @@
                 <td> ERROR </td>
                 {% endif %}
             </tr>
+            <tr>
+                <td colspan="2"><div class="alert alert-secondary w-100">{{book.description}} </div></td>
+            </tr>
         </tbody>
         </table>
     </div>
@@ -47,7 +50,7 @@
     <div class="alert alert-info"> {{ message }} </div>
     {% endif %}
     {% if form_review %}
-    <div class="container border">
+    <div class="container-fluid border p-3">
         <p> Add review </p>
         <form method="post" action="{% url 'online_libr:book' book.id %}">
             {% csrf_token %}
@@ -72,7 +75,9 @@
     {% for r in last_reviews %}
         <div class="media border p-3">
             <div class="media-body">
-                <h5>[{{ r.rating }}] - {{ r.user }} <small><i> {{ r.date }}</i></small></h5>
+                <h5><span class="badge badge-success badge-pill">{{ r.rating }}</span>
+                    - <a href="{% url 'online_libr:profile' r.user.id %}">{{ r.user }}</a> <small><i> {{ r.date }}</i></small>
+                </h5>
                 <p>{{ r.comment }}</p>
             </div>
         </div>

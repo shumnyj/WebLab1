@@ -9,23 +9,23 @@ from django.forms.utils import ErrorList
 from . import models as olm
 
 
-"""class DivErrorList(ErrorList):
+class DivErrorList(ErrorList):
     def __str__(self):
         if not self:
             return ''
-        return '<div class="alert alert-danger">%s</div>' % ''.join(['<div class="error">%s</div>' % e for e in self])"""
+        return '<div class="alert alert-danger">%s</div>' % ''.join(['<div class="error">%s</div>' % e for e in self])
 
 
 class BootstrapFormMixin(forms.BaseForm):
     def as_bootstrap(self):
         """Return this form rendered as bootstrap 4 stacked form."""
-        # self.error_class = DivErrorList
+        self.error_class = DivErrorList
         return self._html_output(
-            normal_row='<div class="form-group"%(html_class_attr)s>%(errors)s%(label)s %(field)s%(help_text)s</div>',
+            normal_row='<div class="form-group"%(html_class_attr)s>%(label)s %(field)s%(help_text)s%(errors)s </div>',
             error_row='<div class="alert alert-danger">%s</div>',
             row_ender='</div>',
             help_text_html=' <span class="helptext">%s</span>',
-            errors_on_separate_row=True,
+            errors_on_separate_row=False,
         )
 
 
@@ -90,6 +90,11 @@ class ReadStatusForm(forms.ModelForm):
         fields = ['status']
 
 
+class SearchForm(forms.Form, BootstrapFormMixin):
+    query = forms.CharField(label='Search', strip=False,
+                            widget=forms.TextInput(attrs={'class': 'form-control mb-2 mr-2'}))
+
+
 class UpdateProfileForm(forms.ModelForm, BootstrapFormMixin):
     sex = forms.ChoiceField(choices=olm.SEX_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
     birth_date = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control', 'placeholder': 'YYYY-MM-DD'}))
@@ -108,3 +113,5 @@ class UpdateProfileForm(forms.ModelForm, BootstrapFormMixin):
         self.instance.libuser.birth_date = self.cleaned_data['birth_date']
         self.instance.libuser.save(commit)  # if commit=False?
         super(UpdateProfileForm, self).save(commit)"""
+
+

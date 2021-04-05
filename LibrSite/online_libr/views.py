@@ -5,8 +5,9 @@ from django.db.utils import IntegrityError
 
 from django.contrib.auth import login, logout, views as auth_views, models as auth_models
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
-from django.views.generic import DetailView, FormView, View, UpdateView
+from django.views.generic import DetailView, FormView, View, UpdateView, ListView
 from django.forms.models import model_to_dict
 
 from django.conf import settings
@@ -31,6 +32,7 @@ def index_view(request):
 
 
 def about_view(request):
+    # % url 'online_libr:api-root' %}
     return render(request, "online_libr/about.html")
 
 
@@ -65,12 +67,14 @@ class BookView(View):
         context = dict()
         # could split into 2 views
         book = get_object_or_404(olm.Book, pk=self.kwargs['book_id'])
+        inc_read = None     # increment read counter of a book
         if 'chagestatus' in request.POST:           # checking which form is it (not secure?)
             # modify or add if don't exist
             try:
                 obj = olm.ReadStatus.objects.filter(user=request.user).get(book=book)
                 form = self.form_status(request.POST, instance=obj)
             except (KeyError, olm.ReadStatus.DoesNotExist):
+                inc_read = True
                 form = self.form_status(request.POST)
         elif 'addreview' in request.POST:
             form = self.form_review(request.POST)
@@ -82,6 +86,9 @@ class BookView(View):
             obj.book = book
             try:
                 obj.save()
+                if inc_read:
+                    obj.book.read_counter += 1
+                    obj.book.save()
                 # context['message'] = "Changes successful"
                 return HttpResponseRedirect(reverse("online_libr:book", args=[book.id]))
             except IntegrityError:
@@ -162,13 +169,36 @@ class ProfileView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['lib_user'] = super().get_object().libuser
+        print(str(super().get_object().reviews.all()))
+        """try:
+            statuses = olm.ReadStatus.all().filter(user=super().get_object())
+            context['user_statuses'] = statuses
+        except olm.ReadStatus.DoesNotExist:
+            pass"""
         return context
 
 
-class ProfileUpdate(FormView):
+class UserReviewsView(ListView):
+    template_name = "online_libr/user_reviews.html"
+    # queryset = olm.Review.objects.all()
+    context_object_name = 'reviews_list'
+    allow_empty = True
+    ordering = 'date'
+    paginate_by = 10
+
+    def get_queryset(self):
+        return olm.Review.objects.filter(user_id=self.kwargs['pk'])
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = {'related_user': get_object_or_404(auth_models.User, id=self.kwargs['pk'])}
+        return super().get_context_data(**context)
+
+
+class ProfileUpdate(FormView, LoginRequiredMixin):
     template_name = "online_libr/edit_profile.html"
     form_class = olf.UpdateProfileForm
     success_url = reverse_lazy("online_libr:index")
+    login_url = reverse_lazy("online_libr:login")
 
     def get_form(self, form_class=None):
         if form_class is None:
@@ -200,6 +230,27 @@ class ProfileUpdate(FormView):
         self.request.user.libuser.save()
         return super(ProfileUpdate, self).form_valid(form)
 
+
+class SearchView(FormView):
+    form_class = olf.SearchForm
+    template_name = "online_libr/search.html"
+
+
+def search_view(request):
+    context = dict()
+    if request.method == 'POST':  # Form sent
+        form = olf.SearchForm(request.POST)
+        context['form'] = form
+        if form.is_valid():
+            qry = form.cleaned_data['query']
+            try:
+                found_books = olm.Book.objects.filter(title__iregex=qry.replace(' ', '.*'))
+            except olm.Book.DoesNotExist:
+                found_books = None
+            context['found_books'] = found_books
+    else:
+        context['form'] = olf.SearchForm()
+    return render(request, "online_libr/search.html", context)
 
 # api views
 

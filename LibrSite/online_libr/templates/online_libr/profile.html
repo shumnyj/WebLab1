@@ -30,10 +30,30 @@
             <td>{{lib_user.birth_date}}</td>
         </tr>
     </table>
+
     {% if user.is_authenticated and user.id == base_user.id %}
+    <div class="container", style="padding: 20px">
         <a class="btn btn-primary" href="{% url 'online_libr:profile_edit' %}" > Edit profile </a>
         <a class="btn btn-secondary" href="{% url 'online_libr:logout' %}">Logout</a>
+    </div>
     {% endif %}
+    <div class="container w-100">
+        <h5> <a href="{% url 'online_libr:user_reviews' base_user.id %}"> User's reviews </a> </h5>
+        <h5> User's book list </h5>
+        <div class="list-group">
+        {% regroup user.statuses.all by status as status_list %}
+        {% for selected_status, entries in status_list %}
+            <a class="list-group-item bg-secondary p-0 pl-2">
+                <span class="badge badge-primary badge-pill">-- {{ selected_status }} --</span>
+            </a>
+            {% for ent in entries %}
+            <a href="{% url 'online_libr:book' ent.book.id %}" class="list-group-item list-group-item-action p-0 pl-2">
+                <span class="badge badge-primary badge-pill">{{ ent.status }}</span> {{ ent.book }}
+            </a>
+            {% endfor %}
+        {% endfor %}
+        </div>
+    </div>
     {% endif %}
 {% endblock %}
 

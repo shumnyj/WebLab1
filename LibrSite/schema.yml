@@ -677,6 +677,12 @@ components:
           type: string
           format: date
           nullable: true
+        description:
+          type: string
+          maxLength: 500
+        rating:
+          type: integer
+          readOnly: true
         reviews:
           type: string
           format: uri
@@ -684,6 +690,7 @@ components:
       required:
       - author
       - id
+      - rating
       - reviews
       - title
       - url
@@ -808,6 +815,12 @@ components:
           type: string
           format: date
           nullable: true
+        description:
+          type: string
+          maxLength: 500
+        rating:
+          type: integer
+          readOnly: true
         reviews:
           type: string
           format: uri
@@ -977,7 +990,6 @@ components:
       - P
       - C
       - D
-      - U
       - R
       type: string
     StatusSerializerPost:

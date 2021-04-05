@@ -1,0 +1,23 @@
+{% extends "./base.html" %}
+
+{% block title %} Search {% endblock %}
+
+{% block content %}
+
+<div class="container justify-content-center">
+    <form method="post" action="{% url 'online_libr:search' %}" class="form-inline" style="width:500px; max-width: 500px; margin:10px">
+    {% csrf_token %}
+    {{ form.as_bootstrap }}
+    <input type="submit" class="btn btn-primary mb-2" value="Search">
+    </form>
+    <div class="list-group">
+    {% for book in found_books %}
+        <a href="{% url 'online_libr:book' book.id %}" class="list-group-item list-group-item-action">
+            {{ book.title }}
+        </a>
+    {% empty %}
+        <p> No books found </p>
+    {% endfor %}
+    </div>
+</div>
+{% endblock %}

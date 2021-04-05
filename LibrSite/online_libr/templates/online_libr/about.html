@@ -8,5 +8,7 @@
 <h5 class="text-center">To access full functionality please <a href="{% url 'online_libr:login' %}">log in</a>
     or <a href="{% url 'online_libr:register' %}" >sign up</a> </h5>
 {% endif %}
-<p class="ct" >Website by Troian Boyrs (troian.tbv@gmail.com) 2021-2021</p>
+<p class="text-center" >You can check out my <a href="{% url 'online_libr:api-root' %}">API here</a></p>
+<p class="text-center" ><a href="{% url 'online_libr:redoc' %}">API Documentation</a></p>
+<p class="text-center" >Website by Troian Borys (troian.tbv@gmail.com) 2021-2021</p>
 {% endblock %}

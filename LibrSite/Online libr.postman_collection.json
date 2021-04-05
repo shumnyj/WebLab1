@@ -47,19 +47,10 @@
 											},
 											"response": [
 												{
-													"name": "Untitled Example",
+													"name": "books reviews retrieve",
 													"originalRequest": {
 														"method": "GET",
-														"header": [
-															{
-																"description": {
-																	"content": "Added as a part of security scheme: basic",
-																	"type": "text/plain"
-																},
-																"key": "Authorization",
-																"value": "Basic <credentials>"
-															}
-														],
+														"header": [],
 														"url": {
 															"raw": "{{baseUrl}}/api/books/:id/reviews/",
 															"host": [
@@ -74,7 +65,10 @@
 															],
 															"variable": [
 																{
-																	"key": "id"
+																	"key": "id",
+																	"value": "{{idSmall}}",
+																	"type": "string",
+																	"description": "(Required) A unique integer value identifying this book."
 																}
 															]
 														}
@@ -84,12 +78,44 @@
 													"_postman_previewlanguage": "json",
 													"header": [
 														{
+															"key": "Date",
+															"value": "Mon, 05 Apr 2021 22:04:13 GMT"
+														},
+														{
+															"key": "Server",
+															"value": "WSGIServer/0.2 CPython/3.9.2"
+														},
+														{
 															"key": "Content-Type",
 															"value": "application/json"
+														},
+														{
+															"key": "Vary",
+															"value": "Accept, Cookie"
+														},
+														{
+															"key": "Allow",
+															"value": "GET, HEAD, OPTIONS"
+														},
+														{
+															"key": "X-Frame-Options",
+															"value": "DENY"
+														},
+														{
+															"key": "Content-Length",
+															"value": "178"
+														},
+														{
+															"key": "X-Content-Type-Options",
+															"value": "nosniff"
+														},
+														{
+															"key": "Referrer-Policy",
+															"value": "same-origin"
 														}
 													],
 													"cookie": [],
-													"body": "{\n \"book\": -73932436,\n \"id\": 90259864,\n \"url\": \"https://SofyipFRxqvm.vczF5LV.AA4nNh6mLoTqBACN7xNO\",\n \"user\": \"https://FAItchjVEM.jutB5XTi2QK4-AslS4pqWylltU6Myo,HQ4ET\",\n \"rating\": 5,\n \"comment\": \"incididunt sunt\"\n}"
+													"body": "[\n    {\n        \"url\": \"http://localhost:8000/api/reviews/30/\",\n        \"id\": 30,\n        \"user\": \"http://localhost:8000/api/users/2/\",\n        \"book\": \"http://localhost:8000/api/books/2/\",\n        \"rating\": 6,\n        \"comment\": \"very cool\"\n    }\n]"
 												}
 											]
 										}
@@ -127,19 +153,10 @@
 											},
 											"response": [
 												{
-													"name": "Untitled Example",
+													"name": "books statuses retrieve",
 													"originalRequest": {
 														"method": "GET",
-														"header": [
-															{
-																"description": {
-																	"content": "Added as a part of security scheme: basic",
-																	"type": "text/plain"
-																},
-																"key": "Authorization",
-																"value": "Basic <credentials>"
-															}
-														],
+														"header": [],
 														"url": {
 															"raw": "{{baseUrl}}/api/books/:id/statuses/",
 															"host": [
@@ -154,7 +171,10 @@
 															],
 															"variable": [
 																{
-																	"key": "id"
+																	"key": "id",
+																	"value": "{{idSmall}}",
+																	"type": "string",
+																	"description": "(Required) A unique integer value identifying this book."
 																}
 															]
 														}
@@ -164,12 +184,44 @@
 													"_postman_previewlanguage": "json",
 													"header": [
 														{
+															"key": "Date",
+															"value": "Mon, 05 Apr 2021 22:04:42 GMT"
+														},
+														{
+															"key": "Server",
+															"value": "WSGIServer/0.2 CPython/3.9.2"
+														},
+														{
 															"key": "Content-Type",
 															"value": "application/json"
+														},
+														{
+															"key": "Vary",
+															"value": "Accept, Cookie"
+														},
+														{
+															"key": "Allow",
+															"value": "GET, HEAD, OPTIONS"
+														},
+														{
+															"key": "X-Frame-Options",
+															"value": "DENY"
+														},
+														{
+															"key": "Content-Length",
+															"value": "179"
+														},
+														{
+															"key": "X-Content-Type-Options",
+															"value": "nosniff"
+														},
+														{
+															"key": "Referrer-Policy",
+															"value": "same-origin"
 														}
 													],
 													"cookie": [],
-													"body": "{\n \"book\": -83082528,\n \"date\": \"1976-04-28\",\n \"id\": -78207470,\n \"url\": \"http://lVUHCCdpwVRJxPriQXyoyAzFHJnF.nkopO-V43LczNa+R0VNA\",\n \"user\": \"http://ZGsZHDAqzxAUAgXTiVXGKCGk.fcadIWJv4Yt7mzcAWU\",\n \"status\": \"D\"\n}"
+													"body": "[\n    {\n        \"url\": \"http://localhost:8000/api/statuses/26/\",\n        \"id\": 26,\n        \"user\": \"http://localhost:8000/api/users/2/\",\n        \"book\": \"http://localhost:8000/api/books/2/\",\n        \"status\": \"P\",\n        \"date\": \"2021-04-05\"\n    }\n]"
 												}
 											]
 										}
@@ -182,7 +234,18 @@
 											"listen": "test",
 											"script": {
 												"exec": [
-													""
+													"pm.test(\"Book field check\", function () {\r",
+													"    var jsonData = pm.response.json();\r",
+													"    pm.expect(jsonData.id).to.be.a('number')\r",
+													"    pm.expect(jsonData.id).to.be.greaterThan(0)\r",
+													"    pm.expect(jsonData.title).to.be.a('string')\r",
+													"    pm.expect(jsonData.description).to.be.a('string')\r",
+													"    pm.expect(jsonData.author).to.be.a('string')\r",
+													"    pm.expect(jsonData.publisher).to.be.a('string')\r",
+													"    pm.expect(jsonData.rating).to.be.a('number')\r",
+													"    pm.expect(jsonData.id).to.be.greaterThan(0)\r",
+													"    pm.expect(jsonData.pub_date).to.be.a('string')\r",
+													"});"
 												],
 												"type": "text/javascript"
 											}
@@ -245,7 +308,7 @@
 											"header": [
 												{
 													"key": "Date",
-													"value": "Sun, 04 Apr 2021 19:05:07 GMT"
+													"value": "Mon, 05 Apr 2021 22:26:33 GMT"
 												},
 												{
 													"key": "Server",
@@ -269,7 +332,7 @@
 												},
 												{
 													"key": "Content-Length",
-													"value": "234"
+													"value": "279"
 												},
 												{
 													"key": "X-Content-Type-Options",
@@ -281,7 +344,7 @@
 												}
 											],
 											"cookie": [],
-											"body": "{\n    \"url\": \"http://localhost:8000/api/books/2/\",\n    \"id\": 2,\n    \"title\": \"Модули ядра Linux\",\n    \"author\": \"Олег Цилюрик\",\n    \"publisher\": \"Creative Commons\",\n    \"pub_date\": \"2015-03-18\",\n    \"reviews\": \"http://localhost:8000/api/books/2/reviews/\"\n}"
+											"body": "{\n    \"url\": \"http://localhost:8000/api/books/2/\",\n    \"id\": 2,\n    \"title\": \"Модули ядра Linux\",\n    \"author\": \"Олег Цилюрик\",\n    \"publisher\": \"do culpa fugiat\",\n    \"pub_date\": \"2015-03-18\",\n    \"description\": \"Test description\",\n    \"rating\": 0,\n    \"reviews\": \"http://localhost:8000/api/books/2/reviews/\"\n}"
 										}
 									]
 								},
@@ -315,6 +378,11 @@
 												{
 													"key": "pub_date",
 													"value": "2015-03-18"
+												},
+												{
+													"key": "description",
+													"value": "Test description",
+													"type": "text"
 												},
 												{
 													"key": "cupidatat69b",
@@ -454,6 +522,12 @@
 												{
 													"key": "pub_date",
 													"value": "1961-07-20",
+													"disabled": true
+												},
+												{
+													"key": "description",
+													"value": "TEST DESC",
+													"type": "text",
 													"disabled": true
 												}
 											]
@@ -617,6 +691,74 @@
 									],
 									"cookie": [],
 									"body": "{\n \"count\": 123,\n \"next\": \"http://api.example.org/accounts/?page=4\",\n \"previous\": \"http://api.example.org/accounts/?page=2\",\n \"results\": [\n  {\n   \"author\": \"officia aliqua mollit adip\",\n   \"id\": -58629245,\n   \"reviews\": \"http://XqgVEzPgOmF.gbjlcLtTdTWTDIdw1FUY5sgsPRSknL\",\n   \"title\": \"magna irure\",\n   \"url\": \"http://uCjQFoUXjWoYJTDH.mbe.g7881D42gcGNJ5Twespgp7eygZNatMSzB35ByZU9W\",\n   \"publisher\": \"aute ut Duis pariatur nostrud\",\n   \"pub_date\": \"1978-08-22\"\n  },\n  {\n   \"author\": \"in dolor\",\n   \"id\": -98432153,\n   \"reviews\": \"https://xYGFBE.myfH,qHzYM\",\n   \"title\": \"voluptate reprehenderit\",\n   \"url\": \"http://edPdjRgWnKrdSGgGufaJWRzUcfuMzgOM.ayaMS3FS3OppP,RDTGGdBTQtw\",\n   \"publisher\": \"veniam dolor\",\n   \"pub_date\": \"2021-02-23\"\n  }\n ]\n}"
+								},
+								{
+									"name": "books list",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/api/books/?page=1",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"books",
+												""
+											],
+											"query": [
+												{
+													"key": "page",
+													"value": "1",
+													"description": "A page number within the paginated result set."
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Mon, 05 Apr 2021 22:00:03 GMT"
+										},
+										{
+											"key": "Server",
+											"value": "WSGIServer/0.2 CPython/3.9.2"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Vary",
+											"value": "Accept, Cookie"
+										},
+										{
+											"key": "Allow",
+											"value": "GET, POST, HEAD, OPTIONS"
+										},
+										{
+											"key": "X-Frame-Options",
+											"value": "DENY"
+										},
+										{
+											"key": "Content-Length",
+											"value": "2200"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "Referrer-Policy",
+											"value": "same-origin"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"count\": 8,\n    \"next\": null,\n    \"previous\": null,\n    \"results\": [\n        {\n            \"url\": \"http://localhost:8000/api/books/3/\",\n            \"id\": 3,\n            \"title\": \"Harry Potter and the Chamber of Secrets\",\n            \"author\": \"Joanne Rowling\",\n            \"publisher\": \"MyPub1\",\n            \"pub_date\": \"1998-07-02\",\n            \"description\": \"\",\n            \"rating\": 0,\n            \"reviews\": \"http://localhost:8000/api/books/3/reviews/\"\n        },\n        {\n            \"url\": \"http://localhost:8000/api/books/4/\",\n            \"id\": 4,\n            \"title\": \"Harry Potter and the Prisoner of Azkaban\",\n            \"author\": \"Joanne Rowling\",\n            \"publisher\": \"MyPub1\",\n            \"pub_date\": \"1998-07-08\",\n            \"description\": \"\",\n            \"rating\": 0,\n            \"reviews\": \"http://localhost:8000/api/books/4/reviews/\"\n        },\n        {\n            \"url\": \"http://localhost:8000/api/books/5/\",\n            \"id\": 5,\n            \"title\": \"Linux Device Drivers Development\",\n            \"author\": \"John Madieu\",\n            \"publisher\": \"Packt\",\n            \"pub_date\": \"2017-10-30\",\n            \"description\": \"\",\n            \"rating\": 0,\n            \"reviews\": \"http://localhost:8000/api/books/5/reviews/\"\n        },\n        {\n            \"url\": \"http://localhost:8000/api/books/6/\",\n            \"id\": 6,\n            \"title\": \"JavaScript For Dummies\",\n            \"author\": \"Emily A. Vander Veer\",\n            \"publisher\": \"IDG Books Worldwide\",\n            \"pub_date\": \"2000-10-15\",\n            \"description\": \"\",\n            \"rating\": 0,\n            \"reviews\": \"http://localhost:8000/api/books/6/reviews/\"\n        },\n        {\n            \"url\": \"http://localhost:8000/api/books/7/\",\n            \"id\": 7,\n            \"title\": \"The Stormlight Archive The Way of Kings\",\n            \"author\": \"Brandon Sanderson\",\n            \"publisher\": \"Tor Books\",\n            \"pub_date\": \"2010-08-31\",\n            \"description\": \"\",\n            \"rating\": 0,\n            \"reviews\": \"http://localhost:8000/api/books/7/reviews/\"\n        },\n        {\n            \"url\": \"http://localhost:8000/api/books/2/\",\n            \"id\": 2,\n            \"title\": \"Модули ядра Linux\",\n            \"author\": \"Олег Цилюрик\",\n            \"publisher\": \"do culpa fugiat\",\n            \"pub_date\": \"2015-03-18\",\n            \"description\": \"Book about linux kernel\",\n            \"rating\": 0,\n            \"reviews\": \"http://localhost:8000/api/books/2/reviews/\"\n        },\n        {\n            \"url\": \"http://localhost:8000/api/books/1/\",\n            \"id\": 1,\n            \"title\": \"Harry Potter and Philosopher's Stone\",\n            \"author\": \"Joanne Rowling\",\n            \"publisher\": \"MyPub1\",\n            \"pub_date\": \"1997-06-26\",\n            \"description\": \"bestseller 111 222 333 \",\n            \"rating\": 0,\n            \"reviews\": \"http://localhost:8000/api/books/1/reviews/\"\n        },\n        {\n            \"url\": \"http://localhost:8000/api/books/8/\",\n            \"id\": 8,\n            \"title\": \"Капитал\",\n            \"author\": \"Карл Маркс\",\n            \"publisher\": \"Мультимедийное издательство Стрельбицкого\",\n            \"pub_date\": \"2020-10-10\",\n            \"description\": \"\",\n            \"rating\": 0,\n            \"reviews\": \"http://localhost:8000/api/books/8/reviews/\"\n        }\n    ]\n}"
 								}
 							]
 						},
@@ -666,6 +808,11 @@
 										{
 											"key": "pub_date",
 											"value": "1962-02-17"
+										},
+										{
+											"key": "description",
+											"value": "12312312312321",
+											"type": "text"
 										},
 										{
 											"key": "cupidatat69b",
@@ -768,7 +915,7 @@
 									"script": {
 										"exec": [
 											"pm.collectionVariables.set(\"postedNewId\", 0);\r",
-											"pm.test(\"Normal response\", function () {\r",
+											"pm.test(\"Delete response\", function () {\r",
 											"    pm.response.to.have.status(204);\r",
 											"});"
 										],
@@ -1052,46 +1199,6 @@
 											"body": "{\n \"book\": \"http://QatUeFRlrGyLqOCHjPMATnzQsktZIed.ljppR4+.NjskyCwCh9KbWvy2wgFlJ--DJqmEUD3ZbWDP,rgNtp\",\n \"id\": 3171280,\n \"url\": \"http://hJpnbf.nxR2eVuffYEg4uQQMKgQ8gyNMz\",\n \"user\": \"http://uTFnquHOZMJDhSi.ocmhe2.le0TMrjiG7YD6IjBXyWWTl-dMi2k4i9hHmQugkxLy\",\n \"rating\": 1,\n \"comment\": \"irure culpa\"\n}"
 										}
 									]
-								},
-								{
-									"name": "reviews destroy",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"exec": [
-													"pm.collectionVariables.set(\"postedNewId\", 0);\r",
-													"pm.test(\"Normal response\", function () {\r",
-													"    pm.response.to.have.status(204);\r",
-													"});"
-												],
-												"type": "text/javascript"
-											}
-										}
-									],
-									"request": {
-										"method": "DELETE",
-										"header": [],
-										"url": {
-											"raw": "{{baseUrl}}/api/reviews/:id/",
-											"host": [
-												"{{baseUrl}}"
-											],
-											"path": [
-												"api",
-												"reviews",
-												":id",
-												""
-											],
-											"variable": [
-												{
-													"key": "id",
-													"value": "{{postedNewId}}"
-												}
-											]
-										}
-									},
-									"response": []
 								}
 							]
 						},
@@ -1292,6 +1399,46 @@
 									"body": "{\n \"book\": -73932436,\n \"id\": 90259864,\n \"url\": \"https://SofyipFRxqvm.vczF5LV.AA4nNh6mLoTqBACN7xNO\",\n \"user\": \"https://FAItchjVEM.jutB5XTi2QK4-AslS4pqWylltU6Myo,HQ4ET\",\n \"rating\": 5,\n \"comment\": \"incididunt sunt\"\n}"
 								}
 							]
+						},
+						{
+							"name": "reviews destroy",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.collectionVariables.set(\"postedNewId\", 0);\r",
+											"pm.test(\"Normal response\", function () {\r",
+											"    pm.response.to.have.status(204);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/reviews/:id/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"reviews",
+										":id",
+										""
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{postedNewId}}"
+										}
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -1422,7 +1569,7 @@
 											"urlencoded": [
 												{
 													"key": "status",
-													"value": "R"
+													"value": "C"
 												}
 											]
 										},
@@ -1440,7 +1587,7 @@
 											"variable": [
 												{
 													"key": "id",
-													"value": "11",
+													"value": "{{postedNewId}}",
 													"type": "string",
 													"description": "(Required) A unique integer value identifying this read status."
 												}
@@ -1502,55 +1649,6 @@
 											"body": "{\n \"book\": \"https://xEmtQMNCtd.mbxrHwUNTG+c5wpZrMP1zUVbCfXxzU4bR-2\",\n \"date\": \"1983-06-23\",\n \"id\": 26677794,\n \"url\": \"http://XtDypPBkHKHjukmL.soV\",\n \"user\": \"https://hAR.umwu13\",\n \"status\": \"R\"\n}"
 										}
 									]
-								},
-								{
-									"name": "statuses destroy",
-									"event": [
-										{
-											"listen": "prerequest",
-											"script": {
-												"exec": [
-													""
-												],
-												"type": "text/javascript"
-											}
-										},
-										{
-											"listen": "test",
-											"script": {
-												"exec": [
-													"pm.collectionVariables.set(\"postedNewId\", 0);\r",
-													"pm.test(\"Normal response\", function () {\r",
-													"    pm.response.to.have.status(204);\r",
-													"});"
-												],
-												"type": "text/javascript"
-											}
-										}
-									],
-									"request": {
-										"method": "DELETE",
-										"header": [],
-										"url": {
-											"raw": "{{baseUrl}}/api/statuses/:id/",
-											"host": [
-												"{{baseUrl}}"
-											],
-											"path": [
-												"api",
-												"statuses",
-												":id",
-												""
-											],
-											"variable": [
-												{
-													"key": "id",
-													"value": "{{postedNewId}}"
-												}
-											]
-										}
-									},
-									"response": []
 								}
 							]
 						},
@@ -1751,6 +1849,55 @@
 									"body": "{\n \"book\": -83082528,\n \"date\": \"1976-04-28\",\n \"id\": -78207470,\n \"url\": \"http://lVUHCCdpwVRJxPriQXyoyAzFHJnF.nkopO-V43LczNa+R0VNA\",\n \"user\": \"http://ZGsZHDAqzxAUAgXTiVXGKCGk.fcadIWJv4Yt7mzcAWU\",\n \"status\": \"D\"\n}"
 								}
 							]
+						},
+						{
+							"name": "statuses destroy",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.collectionVariables.set(\"postedNewId\", 0);\r",
+											"pm.test(\"Normal response\", function () {\r",
+											"    pm.response.to.have.status(204);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/statuses/:id/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"statuses",
+										":id",
+										""
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{postedNewId}}"
+										}
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -1999,7 +2146,8 @@
 						"type": "text/javascript",
 						"exec": [
 							"pm.test(\"Normal response\", function () {",
-							"    pm.response.to.have.status(200);",
+							"    pm.expect(pm.response.code).to.be.oneOf([200,201,202,203,204]);",
+							"    //pm.response.to.have.status(200);",
 							"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json');",
 							"    pm.expect(pm.response.json())",
 							"});"
@@ -2046,17 +2194,17 @@
 	],
 	"variable": [
 		{
-			"id": "a63e21f1-f4a6-4be8-99b4-cc6464a09f4b",
+			"id": "b3e2f457-00c6-46c4-99da-3be61757d38e",
 			"key": "baseUrl",
 			"value": "http://localhost:8000"
 		},
 		{
-			"id": "7af72051-699f-45d0-85af-d1dcc67c005f",
+			"id": "19851981-0a06-4a79-aac9-c804d93d6b7e",
 			"key": "idSmall",
 			"value": "2"
 		},
 		{
-			"id": "c7c92722-c33a-4720-a6cf-71af98ec12fa",
+			"id": "d4ca22e3-7bd2-4142-8258-ee27f8929163",
 			"key": "postedNewId",
 			"value": "-1"
 		}

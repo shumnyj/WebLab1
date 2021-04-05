@@ -1,0 +1,37 @@
+{% extends "./base.html" %}
+{% load static %}
+{% block title %} Reviews of {{related_user}} {% endblock %}
+
+{% block content %}
+<div class="container-fluid justify-content-center w-100">
+    <h4 class="text-center"> Reviews of <a href="{% url 'online_libr:profile' related_user.id %}">{{related_user}}</a> </h4>
+    <div>
+    {% for r in reviews_list %}
+        <div class="media border p-3">
+            <div class="media-body ">
+                <h5><span class="badge badge-success badge-pill">{{ r.rating }}</span> - {{ r.book }} <small><i> {{ r.date }}</i></small></h5>
+                <p>{{ r.comment }}</p>
+            </div>
+        </div>
+    {% empty %}
+        <p> No reviews yet </p>
+    {% endfor %}
+    </div>
+    <div class="container">
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page=1">&laquo; First</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Prev</a></li>
+            {% endif %}
+            <li class="page-link">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </li>
+            {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}"> Next</a></li>
+            <li class="page-item"> <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}"> Last &raquo;</a> </li>
+            {% endif %}
+        </ul>
+    </div>
+</div>
+
+{% endblock %}

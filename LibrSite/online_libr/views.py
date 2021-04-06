@@ -59,61 +59,60 @@ class BookView(View):
     form_review = olf.ReviewForm
     form_status = olf.ReadStatusForm
 
+    book = None
+    u_review = None
+    u_status = None
+
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name, self._common_context(request))
 
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
-        context = dict()
+        context = self._common_context(request)
         # could split into 2 views
-        book = get_object_or_404(olm.Book, pk=self.kwargs['book_id'])
-        inc_read = None     # increment read counter of a book
         if 'chagestatus' in request.POST:           # checking which form is it (not secure?)
             # modify or add if don't exist
-            try:
-                obj = olm.ReadStatus.objects.filter(user=request.user).get(book=book)
-                form = self.form_status(request.POST, instance=obj)
-            except (KeyError, olm.ReadStatus.DoesNotExist):
-                inc_read = True
-                form = self.form_status(request.POST)
+            form = self.form_status(request.POST, instance=self.u_status)
         elif 'addreview' in request.POST:
-            form = self.form_review(request.POST)
+            form = self.form_review(request.POST, instance=self.u_review)
         else:
             form = None
         if form and form.is_valid():
             obj = form.save(commit=False)
             obj.user = request.user
-            obj.book = book
+            obj.book = self.book
             try:
                 obj.save()
-                if inc_read:
+                if not self.u_status:
                     obj.book.read_counter += 1
                     obj.book.save()
                 # context['message'] = "Changes successful"
-                return HttpResponseRedirect(reverse("online_libr:book", args=[book.id]))
+                return HttpResponseRedirect(reverse("online_libr:book", args=[self.book.id]))
             except IntegrityError:
                 context['message'] = "Invalid form: integrity error"
-        context.update(self._common_context(request))
+        else:
+            context['message'] = "Invalid form"
+        # context.update(self._common_context(request))
         return render(request, self.template_name, context)
 
     def _common_context(self, request):
         context = dict()
-        book = get_object_or_404(olm.Book, pk=self.kwargs['book_id'])
-
+        self.book = get_object_or_404(olm.Book, pk=self.kwargs['book_id'])
         if request.user.is_authenticated:
             try:
-                tmp = olm.Review.objects.filter(user=request.user).get(book=book)
-                context['user_review'] = tmp
+                self.u_review = request.user.reviews.all().get(book=self.book)
+                context['user_review'] = self.u_review
             except olm.Review.DoesNotExist:
-                context['form_review'] = self.form_review()
+                pass
+            context['form_review'] = self.form_review(instance=self.u_review)
             try:
-                tmp = olm.ReadStatus.objects.filter(user=request.user).get(book=book)
-                context['user_status'] = tmp
-                context['form_status'] = self.form_status(instance=tmp)
+                self.u_status = request.user.statuses.all().get(book=self.book)
+                context['user_status'] = self.u_status
             except olm.ReadStatus.DoesNotExist:
-                context['form_status'] = self.form_status()
-        context['book'] = book
-        context['last_reviews'] = book.reviews.all().order_by('-date')[:4]
+                pass
+            context['form_status'] = self.form_status(instance=self.u_status)
+        context['book'] = self.book
+        context['last_reviews'] = self.book.reviews.all().order_by('-date')[:8]
         return context
 
 

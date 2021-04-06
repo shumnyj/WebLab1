@@ -681,7 +681,9 @@ components:
           type: string
           maxLength: 500
         rating:
-          type: integer
+          type: string
+          format: decimal
+          pattern: ^\d{0,3}(\.\d{0,2})?$
           readOnly: true
         reviews:
           type: string
@@ -819,7 +821,9 @@ components:
           type: string
           maxLength: 500
         rating:
-          type: integer
+          type: string
+          format: decimal
+          pattern: ^\d{0,3}(\.\d{0,2})?$
           readOnly: true
         reviews:
           type: string

@@ -12,7 +12,8 @@
             <img src="{% static 'online_libr/ttt.jpg' %}" class="book-cover" alt="Book cover" class="mr-3 mt-3"
                 style="object-fit: contain;">
         </div>
-        <p class="ct"> Read on site: {{book.read_counter}} </p>
+        <h5 class="text-center"> Read on site: {{book.read_counter}} </h5>
+        <h5 class="text-center"> Rating: {{book.rating}} </h5>
     </div>
     <div class="col-sm-8">
         <h3 class="ct"> {{book.title}} </h3>
@@ -49,25 +50,34 @@
     {% if message %}
     <div class="alert alert-info"> {{ message }} </div>
     {% endif %}
-    {% if form_review %}
-    <div class="container-fluid border p-3">
-        <p> Add review </p>
+
+    {% if user_review %}
+    <div>
+        <p> Your review </p>
+        <div class="media border p-3">
+            <div class="media-body">
+                <h5><span class="badge badge-success badge-pill">{{ user_review.rating }}</span>
+                    <small><i> {{ user_review.date }}</i></small></h5>
+                <p>{{ user_review.comment }}</p>
+            </div>
+            <button class="btn" data-toggle="collapse" data-target="#rev-form-e"> Edit </button>
+        </div>
+        <div id="rev-form-e" class="container-fluid border p-3 collapse">
+        <form method="post" action="{% url 'online_libr:book' book.id %}">
+            {% csrf_token %}
+            {{ form_review.as_bootstrap }}
+            <input type="submit" class="btn btn-primary" name="addreview" value="Save">
+        </form>
+    </div>
+    </div>
+    {% else %}
+    <button class="btn" data-toggle="collapse" data-target="#rev-form">Add review</button>
+    <div id="rev-form" class="container-fluid border p-3 collapse">
         <form method="post" action="{% url 'online_libr:book' book.id %}">
             {% csrf_token %}
             {{ form_review.as_bootstrap }}
             <input type="submit" class="btn btn-primary" name="addreview" value="Add review">
         </form>
-    </div>
-    {% elif user_review %}
-    <div>
-        <p> Your review </p>
-        <div class="media border p-3">
-            <div class="media-body">
-                <h5>[{{ user_review.rating }}] <small><i> {{ user_review.date }}</i></small></h5>
-                <p>{{ user_review.comment }}</p>
-            </div>
-            <a href="#"> Edit </a>
-        </div>
     </div>
     {% endif %}
 

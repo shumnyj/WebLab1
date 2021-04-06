@@ -242,7 +242,7 @@
 													"    pm.expect(jsonData.description).to.be.a('string')\r",
 													"    pm.expect(jsonData.author).to.be.a('string')\r",
 													"    pm.expect(jsonData.publisher).to.be.a('string')\r",
-													"    pm.expect(jsonData.rating).to.be.a('number')\r",
+													"    pm.expect(jsonData.rating).to.be.a('string')\r",
 													"    pm.expect(jsonData.id).to.be.greaterThan(0)\r",
 													"    pm.expect(jsonData.pub_date).to.be.a('string')\r",
 													"});"
@@ -649,50 +649,6 @@
 							},
 							"response": [
 								{
-									"name": "Untitled Example",
-									"originalRequest": {
-										"method": "GET",
-										"header": [
-											{
-												"description": {
-													"content": "Added as a part of security scheme: basic",
-													"type": "text/plain"
-												},
-												"key": "Authorization",
-												"value": "Basic <credentials>"
-											}
-										],
-										"url": {
-											"raw": "{{baseUrl}}/api/books/?page=-88665982",
-											"host": [
-												"{{baseUrl}}"
-											],
-											"path": [
-												"api",
-												"books",
-												""
-											],
-											"query": [
-												{
-													"key": "page",
-													"value": "-88665982"
-												}
-											]
-										}
-									},
-									"status": "OK",
-									"code": 200,
-									"_postman_previewlanguage": "json",
-									"header": [
-										{
-											"key": "Content-Type",
-											"value": "application/json"
-										}
-									],
-									"cookie": [],
-									"body": "{\n \"count\": 123,\n \"next\": \"http://api.example.org/accounts/?page=4\",\n \"previous\": \"http://api.example.org/accounts/?page=2\",\n \"results\": [\n  {\n   \"author\": \"officia aliqua mollit adip\",\n   \"id\": -58629245,\n   \"reviews\": \"http://XqgVEzPgOmF.gbjlcLtTdTWTDIdw1FUY5sgsPRSknL\",\n   \"title\": \"magna irure\",\n   \"url\": \"http://uCjQFoUXjWoYJTDH.mbe.g7881D42gcGNJ5Twespgp7eygZNatMSzB35ByZU9W\",\n   \"publisher\": \"aute ut Duis pariatur nostrud\",\n   \"pub_date\": \"1978-08-22\"\n  },\n  {\n   \"author\": \"in dolor\",\n   \"id\": -98432153,\n   \"reviews\": \"https://xYGFBE.myfH,qHzYM\",\n   \"title\": \"voluptate reprehenderit\",\n   \"url\": \"http://edPdjRgWnKrdSGgGufaJWRzUcfuMzgOM.ayaMS3FS3OppP,RDTGGdBTQtw\",\n   \"publisher\": \"veniam dolor\",\n   \"pub_date\": \"2021-02-23\"\n  }\n ]\n}"
-								},
-								{
 									"name": "books list",
 									"originalRequest": {
 										"method": "GET",
@@ -722,7 +678,7 @@
 									"header": [
 										{
 											"key": "Date",
-											"value": "Mon, 05 Apr 2021 22:00:03 GMT"
+											"value": "Tue, 06 Apr 2021 16:25:35 GMT"
 										},
 										{
 											"key": "Server",
@@ -746,7 +702,7 @@
 										},
 										{
 											"key": "Content-Length",
-											"value": "2200"
+											"value": "4153"
 										},
 										{
 											"key": "X-Content-Type-Options",
@@ -758,7 +714,7 @@
 										}
 									],
 									"cookie": [],
-									"body": "{\n    \"count\": 8,\n    \"next\": null,\n    \"previous\": null,\n    \"results\": [\n        {\n            \"url\": \"http://localhost:8000/api/books/3/\",\n            \"id\": 3,\n            \"title\": \"Harry Potter and the Chamber of Secrets\",\n            \"author\": \"Joanne Rowling\",\n            \"publisher\": \"MyPub1\",\n            \"pub_date\": \"1998-07-02\",\n            \"description\": \"\",\n            \"rating\": 0,\n            \"reviews\": \"http://localhost:8000/api/books/3/reviews/\"\n        },\n        {\n            \"url\": \"http://localhost:8000/api/books/4/\",\n            \"id\": 4,\n            \"title\": \"Harry Potter and the Prisoner of Azkaban\",\n            \"author\": \"Joanne Rowling\",\n            \"publisher\": \"MyPub1\",\n            \"pub_date\": \"1998-07-08\",\n            \"description\": \"\",\n            \"rating\": 0,\n            \"reviews\": \"http://localhost:8000/api/books/4/reviews/\"\n        },\n        {\n            \"url\": \"http://localhost:8000/api/books/5/\",\n            \"id\": 5,\n            \"title\": \"Linux Device Drivers Development\",\n            \"author\": \"John Madieu\",\n            \"publisher\": \"Packt\",\n            \"pub_date\": \"2017-10-30\",\n            \"description\": \"\",\n            \"rating\": 0,\n            \"reviews\": \"http://localhost:8000/api/books/5/reviews/\"\n        },\n        {\n            \"url\": \"http://localhost:8000/api/books/6/\",\n            \"id\": 6,\n            \"title\": \"JavaScript For Dummies\",\n            \"author\": \"Emily A. Vander Veer\",\n            \"publisher\": \"IDG Books Worldwide\",\n            \"pub_date\": \"2000-10-15\",\n            \"description\": \"\",\n            \"rating\": 0,\n            \"reviews\": \"http://localhost:8000/api/books/6/reviews/\"\n        },\n        {\n            \"url\": \"http://localhost:8000/api/books/7/\",\n            \"id\": 7,\n            \"title\": \"The Stormlight Archive The Way of Kings\",\n            \"author\": \"Brandon Sanderson\",\n            \"publisher\": \"Tor Books\",\n            \"pub_date\": \"2010-08-31\",\n            \"description\": \"\",\n            \"rating\": 0,\n            \"reviews\": \"http://localhost:8000/api/books/7/reviews/\"\n        },\n        {\n            \"url\": \"http://localhost:8000/api/books/2/\",\n            \"id\": 2,\n            \"title\": \"Модули ядра Linux\",\n            \"author\": \"Олег Цилюрик\",\n            \"publisher\": \"do culpa fugiat\",\n            \"pub_date\": \"2015-03-18\",\n            \"description\": \"Book about linux kernel\",\n            \"rating\": 0,\n            \"reviews\": \"http://localhost:8000/api/books/2/reviews/\"\n        },\n        {\n            \"url\": \"http://localhost:8000/api/books/1/\",\n            \"id\": 1,\n            \"title\": \"Harry Potter and Philosopher's Stone\",\n            \"author\": \"Joanne Rowling\",\n            \"publisher\": \"MyPub1\",\n            \"pub_date\": \"1997-06-26\",\n            \"description\": \"bestseller 111 222 333 \",\n            \"rating\": 0,\n            \"reviews\": \"http://localhost:8000/api/books/1/reviews/\"\n        },\n        {\n            \"url\": \"http://localhost:8000/api/books/8/\",\n            \"id\": 8,\n            \"title\": \"Капитал\",\n            \"author\": \"Карл Маркс\",\n            \"publisher\": \"Мультимедийное издательство Стрельбицкого\",\n            \"pub_date\": \"2020-10-10\",\n            \"description\": \"\",\n            \"rating\": 0,\n            \"reviews\": \"http://localhost:8000/api/books/8/reviews/\"\n        }\n    ]\n}"
+									"body": "{\n    \"count\": 8,\n    \"next\": null,\n    \"previous\": null,\n    \"results\": [\n        {\n            \"url\": \"http://localhost:8000/api/books/3/\",\n            \"id\": 3,\n            \"title\": \"Harry Potter and the Chamber of Secrets\",\n            \"author\": \"Joanne Rowling\",\n            \"publisher\": \"MyPub1\",\n            \"pub_date\": \"1998-07-02\",\n            \"description\": \"Etiam tristique lacus vitae dui commodo interdum. Nunc non risus eu nisl suscipit vulputate. Praesent mollis tellus sit amet lobortis maximus. Etiam quis nunc at ipsum congue cursus. Nam gravida vehicula ullamcorper. Morbi eget justo vitae nunc ultricies porta sit amet vel urna. Nullam consequat et libero sed suscipit.\",\n            \"rating\": \"0.00\",\n            \"reviews\": \"http://localhost:8000/api/books/3/reviews/\"\n        },\n        {\n            \"url\": \"http://localhost:8000/api/books/4/\",\n            \"id\": 4,\n            \"title\": \"Harry Potter and the Prisoner of Azkaban\",\n            \"author\": \"Joanne Rowling\",\n            \"publisher\": \"MyPub1\",\n            \"pub_date\": \"1998-07-08\",\n            \"description\": \"Etiam tristique lacus vitae dui commodo interdum. Nunc non risus eu nisl suscipit vulputate. Praesent mollis tellus sit amet lobortis maximus. Etiam quis nunc at ipsum congue cursus. Nam gravida vehicula ullamcorper. Morbi eget justo vitae nunc ultricies porta sit amet vel urna. Nullam consequat et libero sed suscipit.\",\n            \"rating\": \"7.00\",\n            \"reviews\": \"http://localhost:8000/api/books/4/reviews/\"\n        },\n        {\n            \"url\": \"http://localhost:8000/api/books/5/\",\n            \"id\": 5,\n            \"title\": \"Linux Device Drivers Development\",\n            \"author\": \"John Madieu\",\n            \"publisher\": \"Packt\",\n            \"pub_date\": \"2017-10-30\",\n            \"description\": \"Etiam tristique lacus vitae dui commodo interdum. Nunc non risus eu nisl suscipit vulputate. Praesent mollis tellus sit amet lobortis maximus. Etiam quis nunc at ipsum congue cursus. Nam gravida vehicula ullamcorper. Morbi eget justo vitae nunc ultricies porta sit amet vel urna. Nullam consequat et libero sed suscipit.\",\n            \"rating\": \"0.00\",\n            \"reviews\": \"http://localhost:8000/api/books/5/reviews/\"\n        },\n        {\n            \"url\": \"http://localhost:8000/api/books/6/\",\n            \"id\": 6,\n            \"title\": \"JavaScript For Dummies\",\n            \"author\": \"Emily A. Vander Veer\",\n            \"publisher\": \"IDG Books Worldwide\",\n            \"pub_date\": \"2000-10-15\",\n            \"description\": \"Etiam tristique lacus vitae dui commodo interdum. Nunc non risus eu nisl suscipit vulputate. Praesent mollis tellus sit amet lobortis maximus. Etiam quis nunc at ipsum congue cursus. Nam gravida vehicula ullamcorper. Morbi eget justo vitae nunc ultricies porta sit amet vel urna. Nullam consequat et libero sed suscipit.\",\n            \"rating\": \"0.00\",\n            \"reviews\": \"http://localhost:8000/api/books/6/reviews/\"\n        },\n        {\n            \"url\": \"http://localhost:8000/api/books/7/\",\n            \"id\": 7,\n            \"title\": \"The Stormlight Archive The Way of Kings\",\n            \"author\": \"Brandon Sanderson\",\n            \"publisher\": \"Tor Books\",\n            \"pub_date\": \"2010-08-31\",\n            \"description\": \"Etiam tristique lacus vitae dui commodo interdum. Nunc non risus eu nisl suscipit vulputate. Praesent mollis tellus sit amet lobortis maximus. Etiam quis nunc at ipsum congue cursus. Nam gravida vehicula ullamcorper. Morbi eget justo vitae nunc ultricies porta sit amet vel urna. Nullam consequat et libero sed suscipit.\",\n            \"rating\": \"7.00\",\n            \"reviews\": \"http://localhost:8000/api/books/7/reviews/\"\n        },\n        {\n            \"url\": \"http://localhost:8000/api/books/2/\",\n            \"id\": 2,\n            \"title\": \"Модули ядра Linux\",\n            \"author\": \"Олег Цилюрик\",\n            \"publisher\": \"do culpa fugiat\",\n            \"pub_date\": \"2015-03-18\",\n            \"description\": \"Test description\",\n            \"rating\": \"0.00\",\n            \"reviews\": \"http://localhost:8000/api/books/2/reviews/\"\n        },\n        {\n            \"url\": \"http://localhost:8000/api/books/8/\",\n            \"id\": 8,\n            \"title\": \"Капитал\",\n            \"author\": \"Карл Маркс\",\n            \"publisher\": \"Мультимедийное издательство Стрельбицкого\",\n            \"pub_date\": \"2020-10-10\",\n            \"description\": \"Etiam tristique lacus vitae dui commodo interdum. Nunc non risus eu nisl suscipit vulputate. Praesent mollis tellus sit amet lobortis maximus. Etiam quis nunc at ipsum congue cursus. Nam gravida vehicula ullamcorper. Morbi eget justo vitae nunc ultricies porta sit amet vel urna. Nullam consequat et libero sed suscipit.\",\n            \"rating\": \"0.00\",\n            \"reviews\": \"http://localhost:8000/api/books/8/reviews/\"\n        },\n        {\n            \"url\": \"http://localhost:8000/api/books/1/\",\n            \"id\": 1,\n            \"title\": \"Harry Potter and Philosopher's Stone\",\n            \"author\": \"Joanne Rowling\",\n            \"publisher\": \"MyPub1\",\n            \"pub_date\": \"1997-06-26\",\n            \"description\": \"bestseller 111 222 333 \",\n            \"rating\": \"6.30\",\n            \"reviews\": \"http://localhost:8000/api/books/1/reviews/\"\n        }\n    ]\n}"
 								}
 							]
 						},
@@ -1133,7 +1089,7 @@
 											"variable": [
 												{
 													"key": "id",
-													"value": "30",
+													"value": "{{postedNewId}}",
 													"type": "string",
 													"description": "(Required) A unique integer value identifying this review."
 												}
@@ -2194,17 +2150,17 @@
 	],
 	"variable": [
 		{
-			"id": "b3e2f457-00c6-46c4-99da-3be61757d38e",
+			"id": "2a45e93a-42b8-4986-ba55-8b9d91a5ce9f",
 			"key": "baseUrl",
 			"value": "http://localhost:8000"
 		},
 		{
-			"id": "19851981-0a06-4a79-aac9-c804d93d6b7e",
+			"id": "f33fba4a-bfee-41b0-be6f-6969683b773e",
 			"key": "idSmall",
 			"value": "2"
 		},
 		{
-			"id": "d4ca22e3-7bd2-4142-8258-ee27f8929163",
+			"id": "9c2ad3f9-e31a-49bd-9d3c-9fc5c4fbe335",
 			"key": "postedNewId",
 			"value": "-1"
 		}

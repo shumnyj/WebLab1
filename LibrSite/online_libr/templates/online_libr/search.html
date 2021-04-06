@@ -4,8 +4,8 @@
 
 {% block content %}
 
-<div class="container justify-content-center">
-    <form method="post" action="{% url 'online_libr:search' %}" class="form-inline" style="width:500px; max-width: 500px; margin:10px">
+<div class="container justify-content-center ">
+    <form method="post" action="{% url 'online_libr:search' %}"  style="width:500px; max-width: 500px; margin:10px">
     {% csrf_token %}
     {{ form.as_bootstrap }}
     <input type="submit" class="btn btn-primary mb-2" value="Search">

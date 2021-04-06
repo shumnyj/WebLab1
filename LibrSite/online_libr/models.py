@@ -37,8 +37,8 @@ class Book(models.Model):
     publisher = models.CharField(max_length=200, default="Unknown")
     pub_date = models.DateField(default="1998-08-06", null=True, blank=True)
     description = models.CharField(max_length=500, default="", blank=True)
-    # rating = models.DecimalField(default=0, editable=False, decimal_places=2, max_digits=5)
-    rating = models.FloatField(default=0, editable=False)
+    rating = models.DecimalField(default=0, editable=False, decimal_places=2, max_digits=5)
+    # rating = models.FloatField(default=0, editable=False)
     read_counter = models.IntegerField(default=0, editable=False)
     added = models.DateField(auto_now_add=True)
 

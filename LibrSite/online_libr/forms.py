@@ -92,7 +92,7 @@ class ReadStatusForm(forms.ModelForm):
 
 class SearchForm(forms.Form, BootstrapFormMixin):
     query = forms.CharField(label='Search', strip=False,
-                            widget=forms.TextInput(attrs={'class': 'form-control mb-2 mr-2'}))
+                            widget=forms.TextInput(attrs={'class': 'form-control mb-2 mr-2 '}))
 
 
 class UpdateProfileForm(forms.ModelForm, BootstrapFormMixin):

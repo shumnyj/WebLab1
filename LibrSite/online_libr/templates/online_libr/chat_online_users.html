@@ -1,0 +1,19 @@
+{% extends "./base.html" %}
+{% load static %}
+{% block title %} Chat users {% endblock %}
+
+{% block content %}
+<h5 class="text-center">Users currently online in book discussion {{chosen_book.title}} </h5>
+<div class="row justify-content-center">
+    <ul class="list-group col-sm-6 overflow-auto" >
+        {% for u in connected_users %}
+        <li class="list-group-item p-1">
+            <a href="{% url 'online_libr:profile' u.user.id %}" target="_blank"> {{u.user.username}}; ID:{{u.pk}}; Connected at: {{ u.conn_start }} </a>
+            <a href="{% url 'online_libr:kick_chat_user' u.pk %}" class="badge badge-danger badge-pill float-right"> Kick </a>
+        </li>
+        {% empty %}
+        <a class="list-group-item p-1"> No users in chat right now. Check again later </a>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

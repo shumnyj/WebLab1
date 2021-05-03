@@ -46,7 +46,18 @@ urlpatterns = [
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='online_libr:schema'), name='redoc'),
 
+    # path('chat/webhook/', views.chat_webhook),
+    path('chat/online/', views.chat_users, name='chat_users'),
+    path('chat/', views.chat_view, name='chat'),
+    path('chat/kick/<int:pk>',  views.kick_chat_user, name='kick_chat_user')
 ]
+
+
+from .models import ChatUser
+ChatUser.objects.all().delete()
+
+
+
 """path(r'api/openapi/', gsv(
         title="Your Project",
         description="API for all things …",

@@ -1,0 +1,48 @@
+{% extends "./base.html" %}
+{% load static %}
+{% block title %} Discussion {% endblock %}
+
+{% block content %}
+<h5 class="text-center">Discussion about <a href="{% url 'online_libr:book' chosen_book.id %}" target="_blank">{{chosen_book.title}}</a></h5>
+<div class="row justify-content-center" >
+
+    <div class="list-group col-md-3  overflow-auto mb-2 visible-sm" style="padding-left: 15px;  height: 500px;" >
+        {% if act_user.is_staff %}
+            <a class="btn btn-info" href="{% url 'online_libr:chat_users' %}" target="_blank" > Control panel </a>
+        {% endif %}
+        {% if act_user %}
+            <a href="{% url 'online_libr:profile' act_user.id %}" target="_blank" class="list-group-item list-group-item-success p-1">{{act_user.username}}</a>
+        {% endif %}
+        {% for u in connected_users %}
+            <a href="{% url 'online_libr:profile' u.user.id %}" target="_blank" class="list-group-item p-1">{{u.user.username}}</a>
+        {% endfor %}
+        <a class="list-group-item p-1">test</a>
+        <a class="list-group-item p-1">test</a>
+        <a class="list-group-item p-1">test</a>
+        <a class="list-group-item p-1">test</a>
+        <a class="list-group-item p-1">test</a>
+        <a class="list-group-item p-1">test</a>
+        <a class="list-group-item p-1">test</a>
+        <a class="list-group-item p-1">test</a>
+        <a class="list-group-item p-1">test</a>
+        <a class="list-group-item p-1">test</a>
+        <a class="list-group-item p-1">test</a>
+        <a class="list-group-item p-1">test</a>
+        <a class="list-group-item p-1">test</a>
+        <a class="list-group-item p-1">test</a>
+        <a class="list-group-item p-1">test</a>
+        <a class="list-group-item p-1">test</a>
+
+    </div>
+    <div class="col-md-9 ">
+        <textarea id="chat-log" cols="100" rows="20" disabled></textarea><br>
+        {{ act_user.username |json_script:"username-field" }} <!-- exposing user to client is bad-->
+        <!-- {{ room_name|json_script:"room-name" }} -->
+    </div>
+</div>
+<div class="form-row">
+    <div class="col-md-11"><input id="chat-message-input" type="text" class="form-control mb-sm-2" size="100" ></div>
+    <div class="col-md-1"><input id="chat-message-submit" type="button" class="btn btn-primary" value="Send"></div>
+</div>
+<script type="text/javascript" src="{% static 'online_libr/websocket_script.js' %}"></script>
+{% endblock %}

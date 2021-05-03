@@ -12,7 +12,7 @@
     <!-- <link rel="stylesheet" type="text/css" href="{% static 'online_libr/general.css' %}"> -->
     {% block scr %} {% endblock %}
 </head>
-<body >
+<body>
 <!-- <h2 class="header">{% block title2 %}Base Page{% endblock %}</h2> -->
 <div class="container w-100 bg-light">
     <nav class="navbar navbar-expand-sm bg-dark justify-content-between sticky-top" >
@@ -27,6 +27,11 @@
             <li class="nav-item">
               <a class="nav-link" href="{% url 'online_libr:about' %}">About</a>
             </li>
+            {% if user.is_authenticated %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'online_libr:chat' %}">Discussion</a>
+            </li>
+            {% endif %}
         </ul>
         <ul class="navbar-nav" style="float:right">
             {% if user.is_authenticated %}
@@ -48,7 +53,7 @@
     </nav>
     <!-- bar -->
     <div style="margin:10px"></div>
-    <div class="container-fluid">
+    <div class="container">
         {% block content %} Err {% endblock %}
     </div>
     <footer></footer>

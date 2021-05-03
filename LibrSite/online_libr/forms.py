@@ -8,6 +8,7 @@ from django.forms.utils import ErrorList
 
 from . import models as olm
 
+from random import choice
 
 class DivErrorList(ErrorList):
     def __str__(self):
@@ -115,3 +116,4 @@ class UpdateProfileForm(forms.ModelForm, BootstrapFormMixin):
         super(UpdateProfileForm, self).save(commit)"""
 
 
+chosen_book = choice(olm.Book.objects.all())

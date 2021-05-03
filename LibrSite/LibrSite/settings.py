@@ -38,10 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'channels',
     'drf_yasg',
     'drf_spectacular',
     'online_libr',
-
 ]
 
 MIDDLEWARE = [
@@ -73,7 +73,12 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'LibrSite.wsgi.application'
-
+ASGI_APPLICATION = 'LibrSite.asgi.application'
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}
 
 
 # Database
@@ -128,7 +133,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
-
+LOGIN_URL = "online_libr:login"
 LOGIN_REDIRECT_URL = "online_libr:index"
 
 REST_FRAMEWORK = {

@@ -31,6 +31,15 @@ class LibUser(models.Model):
         return self.user.last_name + ' ' + self.user.first_name
 
 
+class ChatUser(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
+                                related_name='chatuser', default=0, editable=False, unique=True)
+    conn_start = models.TimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.user.username + ' ' + str(self.conn_start)
+
+
 class Book(models.Model):
     title = models.CharField(max_length=200)
     author = models.CharField(max_length=200)

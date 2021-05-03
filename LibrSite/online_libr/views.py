@@ -20,6 +20,11 @@ from rest_framework.decorators import action
 from rest_framework.exceptions import ParseError
 from .serializers import (IsAdminOrReadOnly, IsCreatorOrReadOnly, ReviewSerializerPost, StatusSerializerPost,
                           ReviewSerializer, StatusSerializer, UserSerializer, BookSerializer)
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
+
+import datetime
+from random import choice
 
 
 def index_view(request):
@@ -28,6 +33,8 @@ def index_view(request):
         context['latest_books'] = olm.Book.objects.order_by('-added')[:5]
     except olm.Book.DoesNotExist:
         print("no books")
+    if request.user.is_authenticated:
+        context["chosen_book_title"] = olf.chosen_book.title
     return render(request, "online_libr/index.html", context)
 
 
@@ -168,7 +175,7 @@ class ProfileView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['lib_user'] = super().get_object().libuser
-        print(str(super().get_object().reviews.all()))
+        # print(str(super().get_object().reviews.all()))
         """try:
             statuses = olm.ReadStatus.all().filter(user=super().get_object())
             context['user_statuses'] = statuses
@@ -228,11 +235,6 @@ class ProfileUpdate(FormView, LoginRequiredMixin):
         self.request.user.libuser.birth_date = form.cleaned_data['birth_date']
         self.request.user.libuser.save()
         return super(ProfileUpdate, self).form_valid(form)
-
-
-class SearchView(FormView):
-    form_class = olf.SearchForm
-    template_name = "online_libr/search.html"
 
 
 def search_view(request):
@@ -349,3 +351,49 @@ ApiRouter.register(r'books', BookViewSet)
 ApiRouter.register(r'users', UserViewSet)
 ApiRouter.register(r'reviews', ReviewViewSet)
 ApiRouter.register(r'statuses', StatusViewSet)
+
+
+@login_required
+def chat_view(request):
+    context = dict()
+    if olf.chosen_book is None:
+        olf.chosen_book = choice(olm.Book.objects.all())  # using SQL DB record is probably overkill
+        # should be chosen/saved daily, currently gets chosen on reboot for simplicity
+    # print(str(olf.chosen_book))
+    context['chosen_book'] = olf.chosen_book
+    context['room_name'] = "test_name"
+    context['act_user'] = request.user
+    context['connected_users'] = olm.ChatUser.objects.all()  # not just admin ?
+    return render(request, 'online_libr/chat_page.html', context)
+
+
+@login_required
+def chat_users(request):
+    if request.user.is_staff:
+        connected_users = olm.ChatUser.objects.all()
+        return render(request, 'online_libr/chat_online_users.html', {'connected_users': connected_users,
+                                                                      'chosen_book': olf.chosen_book})
+    return HttpResponseRedirect(reverse("online_libr:index"))
+
+
+@login_required
+def kick_chat_user(request, pk):
+    if request.user.is_staff:
+        try:
+            chat_user = olm.ChatUser.objects.get(pk=pk).user.username
+            channel_layer = get_channel_layer()
+            if not channel_layer.groups:
+                return HttpResponse('No chat')
+            # (no security, should encrypt this and deencrypt in consumer)
+            async_to_sync(channel_layer.group_send)(
+                list(channel_layer.groups.keys())[0],
+                {
+                    'type': 'chat_message',
+                    'message': '- User %s kicked ! ' % chat_user,
+                    'kick_username': chat_user
+                }
+            )
+        except olm.ChatUser.DoesNotExist:
+            print("Tried to kick non-existent chat user")
+        return HttpResponseRedirect(reverse("online_libr:chat_users"))
+

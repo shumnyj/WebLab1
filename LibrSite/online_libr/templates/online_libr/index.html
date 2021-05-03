@@ -4,8 +4,11 @@
 {% block title2 %} Online Library {% endblock %}
 
 {% block content %}
-<h3 class="ct" style="padding:10px"> Welcome to online library </h3>
+<h3 class="text-center" style="padding:10px"> Welcome to online library </h3>
 <div class=".col-sm" style="margin: 5px">
+    {% if chosen_book_title %}
+    <h5 class="text-center" >You can join <a href="{% url 'online_libr:chat' %}"> today's discusson about {{chosen_book_title}}</a></h5>
+    {% endif %}
     {% if latest_books %}
         <h4> Check out latest arrivals: </h4>
         <div class="list-group">

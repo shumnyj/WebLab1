@@ -3,7 +3,7 @@ from django.core.exceptions import NON_FIELD_ERRORS
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.contrib.auth.forms import (
     AuthenticationForm, PasswordChangeForm, PasswordResetForm, UsernameField)
-from django.contrib.auth import models as auth_models
+from django.contrib.auth import get_user_model, models as auth_models
 from django.forms.utils import ErrorList
 
 from . import models as olm
@@ -61,10 +61,13 @@ class MyRegisterForm(forms.Form, BootstrapFormMixin):
     birth_date = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control', 'placeholder': 'YYYY-MM-DD'}))
 
     def clean_username(self):
-        rep_user = auth_models.User.objects.get_by_natural_key(self.cleaned_data.get('username'))
-        if rep_user:
-            raise forms.ValidationError('Username already in use')
-        return None
+        try:
+            rep_user = get_user_model().objects.get_by_natural_key(self.cleaned_data.get('username'))
+            if rep_user:
+                raise forms.ValidationError('Username already in use')
+        except get_user_model().DoesNotExist:
+            pass
+        return self.cleaned_data.get('username')
 
     def clean_password2(self):
         pwd1 = self.cleaned_data.get('password1')

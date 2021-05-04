@@ -116,28 +116,19 @@ class BookView(View):
         return context
 
 
-def profile_edit_view(request):
-    return HttpResponse("Edit user profile")
-
-
-def register_view(request):
-    form = olf.MyRegisterForm()
-    return render(request, "online_libr/register.html", {'form': form})
-
-
 class RegisterView(FormView):
     template_name = "online_libr/register.html"
     form_class = olf.MyRegisterForm
-    success_url = reverse_lazy("online_libr:login")
+    success_url = reverse_lazy("online_libr:index")
 
     def form_valid(self, form):
-        new_user = auth_models.User()
-        new_libuser = olm.LibUser()
+        new_user = auth_models.User.objects.create_user(form.cleaned_data['username'], form.cleaned_data['email'],
+                                            form.cleaned_data['password1'])
+        new_user.first_name = form.cleaned_data['first_name']
+        new_user.last_name = form.cleaned_data['last_name']
+        new_user.save()
 
-        auth_models.UserManager.create_user(form.cleaned_data['username'], form.cleaned_data['email'],
-                                            form.cleaned_data['password1'],
-                                            {'first_name': form.cleaned_data['first_name'],
-                                                'last_name': form.cleaned_data['last_name']} )
+        new_libuser = olm.LibUser()
         new_libuser.user = new_user
         new_libuser.sex = form.cleaned_data['sex']
         new_libuser.birth_date = form.cleaned_data['birth_date']
@@ -145,7 +136,7 @@ class RegisterView(FormView):
             new_libuser.save()
         except IntegrityError:
             return super().form_invalid(form)
-        login(user=new_user)
+        login(self.request, user=new_user)
         return super().form_valid(form)
 
 
@@ -168,7 +159,7 @@ class ProfileView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['lib_user'] = super().get_object().libuser
-        print(str(super().get_object().reviews.all()))
+        # print(str(super().get_object().reviews.all()))
         """try:
             statuses = olm.ReadStatus.all().filter(user=super().get_object())
             context['user_statuses'] = statuses

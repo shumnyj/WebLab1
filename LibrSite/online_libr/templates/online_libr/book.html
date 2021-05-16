@@ -71,12 +71,12 @@
     </div>
     </div>
     {% else %}
-    <button class="btn" data-toggle="collapse" data-target="#rev-form">Add review</button>
+    <button class="btn btn-primary m-2" data-toggle="collapse" data-target="#rev-form">Add review</button>
     <div id="rev-form" class="container-fluid border p-3 collapse">
         <form method="post" action="{% url 'online_libr:book' book.id %}">
             {% csrf_token %}
             {{ form_review.as_bootstrap }}
-            <input type="submit" class="btn btn-primary" name="addreview" value="Add review">
+            <input type="submit" class="btn btn-primary" name="addreview" value="Send review">
         </form>
     </div>
     {% endif %}

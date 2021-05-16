@@ -10,6 +10,7 @@ from . import models as olm
 
 from random import choice
 
+
 class DivErrorList(ErrorList):
     def __str__(self):
         if not self:

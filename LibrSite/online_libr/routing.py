@@ -4,4 +4,5 @@ from . import consumers
 
 ws_chat_urlpatterns = [
     re_path(r'chat/$', consumers.ChatConsumer.as_asgi()),
+    re_path(r'tasks/$', consumers.TasksConsumer.as_asgi()),
 ]

@@ -1,4 +1,5 @@
 import json
+import random
 
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
@@ -79,3 +80,48 @@ class ChatConsumer(WebsocketConsumer):
         except KeyError:
             pass
 
+
+class TasksConsumer(WebsocketConsumer):
+    room_group_name = 'TasksListen'
+
+    def connect(self):
+        self.room_group_name = 'TasksListen'
+        async_to_sync(self.channel_layer.group_add)(
+            self.room_group_name,
+            self.channel_name
+        )
+        # print(str(self.scope['user']))
+        if isinstance(self.scope['user'], auth_models.User):
+            self.username = self.scope['user'].username
+        else:
+            self.username = "worker %d" % random.randrange(1, 100)  # not bothering with unique names
+        self.accept()
+        """        async_to_sync(self.channel_layer.group_send)(
+            self.room_group_name,
+            {
+                'type': 'task_message',
+                'task': "Connected",
+                'note': "test",
+            }
+        )"""
+
+    def disconnect(self, close_code):
+        async_to_sync(self.channel_layer.group_discard)(
+            self.room_group_name,
+            self.channel_name
+        )
+
+    def receive(self, text_data):
+        text_data_json = json.loads(text_data)
+        message = text_data_json['task']
+        async_to_sync(self.channel_layer.group_send)(
+            self.room_group_name,
+            text_data_json
+        )
+
+    def task_message(self, event):
+        pack = {"task": None, "args": None, "result": None, "finished": None, "task_id": None, "note": None}
+        for field in event.keys():
+            if field != "type":
+                pack[field] = event[field]
+        self.send(text_data=json.dumps(pack))

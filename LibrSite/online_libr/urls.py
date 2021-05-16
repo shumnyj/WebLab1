@@ -1,26 +1,10 @@
 from django.urls import path, include
 
-from rest_framework import permissions
-from drf_yasg.views import get_schema_view
-from drf_yasg import openapi
-from rest_framework.schemas import get_schema_view as gsv
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView
 
 from . import views
 from .views import ApiRouter
-
-"""schema_view = get_schema_view(
-    openapi.Info(
-      title="Online Library API",
-      default_version='v1',
-      description="Redoc api for online library app",
-      contact=openapi.Contact(email="troian.tbv@gmail.com"),
-      license=openapi.License(name="BSD License"),
-    ),
-    public=True,
-    permission_classes=[permissions.AllowAny],
-)"""
-
+from .models import ChatUser
 
 app_name = 'online_libr'
 
@@ -40,29 +24,15 @@ urlpatterns = [
 
     path(r'api/', include((ApiRouter.urls, ''))),
 
-    # path(r'api/schema/redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
-    # path(r'api/schema/', schema_view.without_ui(cache_timeout=0), name='schema'),   # debug
-
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='online_libr:schema'), name='redoc'),
 
     # path('chat/webhook/', views.chat_webhook),
     path('chat/online/', views.chat_users, name='chat_users'),
     path('chat/', views.chat_view, name='chat'),
-    path('chat/kick/<int:pk>',  views.kick_chat_user, name='kick_chat_user')
+    path('chat/kick/<int:pk>',  views.kick_chat_user, name='kick_chat_user'),
+
+    path('tasks/', views.tasks_view, name='tasks'),
 ]
 
-
-from .models import ChatUser
 ChatUser.objects.all().delete()
-
-
-
-"""path(r'api/openapi/', gsv(
-        title="Your Project",
-        description="API for all things …",
-        version="1.0.0",
-        patterns=ApiRouter.urls,
-        urlconf='online_libr.urls'
-
-    ), name='openapi-schema'),"""

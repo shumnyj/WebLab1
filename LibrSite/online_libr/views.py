@@ -14,17 +14,20 @@ from django.conf import settings
 
 from . import models as olm
 from . import forms as olf
+from .tasks import  UpdateRatingsTask, SendMailTask
 
 from rest_framework import routers, viewsets, permissions, response, status
 from rest_framework.decorators import action
 from rest_framework.exceptions import ParseError
 from .serializers import (IsAdminOrReadOnly, IsCreatorOrReadOnly, ReviewSerializerPost, StatusSerializerPost,
                           ReviewSerializer, StatusSerializer, UserSerializer, BookSerializer)
+
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 
-import datetime
+
 from random import choice
+import json
 
 
 def index_view(request):
@@ -90,6 +93,8 @@ class BookView(View):
             obj.book = self.book
             try:
                 obj.save()
+                if isinstance(form, olf.ReviewForm):     # send mail if new/changed review
+                    arbitrary_email_sending(self.book, self.u_review)
                 if not self.u_status:
                     obj.book.read_counter += 1
                     obj.book.save()
@@ -387,4 +392,22 @@ def kick_chat_user(request, pk):
         except olm.ChatUser.DoesNotExist:
             print("Tried to kick non-existent chat user")
         return HttpResponseRedirect(reverse("online_libr:chat_users"))
+
+
+@login_required
+def tasks_view(request):
+    context = dict()
+    context['act_user'] = request.user
+    return render(request, 'online_libr/tasks_monitor.html', context)
+
+
+# In theory could be used to send notification about changes on favourited or "watched" books
+# but I didn't want to change schema, so it sends email on comment posting on book 2
+def arbitrary_email_sending(book, old_review):
+    if not old_review:          # context['form_review'].instance.DoesNotExist:
+        msg = "There is new review on the book %s" % str(book)
+    else:
+        msg = "There is updated review on the book %s" % str(book)
+    send_id = SendMailTask().delay(msg)   # queue is already set up
+    return send_id
 

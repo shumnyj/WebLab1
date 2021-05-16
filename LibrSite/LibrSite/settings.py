@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -79,7 +80,6 @@ CHANNEL_LAYERS = {
         "BACKEND": "channels.layers.InMemoryChannelLayer"
     }
 }
-
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
@@ -164,3 +164,6 @@ SPECTACULAR_SETTINGS = {
     # Set VERSION to None if only the request version should be rendered.
     'VERSION': '1.0.2',
 }
+
+# CELERY_BROKER_URL = 'redis://77.47.204.199:6379/5'
+# CELERY_ALWAYS_EAGER = True
